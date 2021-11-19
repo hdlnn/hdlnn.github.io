@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg-blog.csdnimg.cn%2Fimg_convert%2F91868a37481f41dbc2b53a2303ce8fff.png&refer=http%3A%2F%2Fimg-blog.csdnimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1639832962&t=c9890b1c72ba7f1d39cce307f490e704">
 <meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic4.zhimg.com%2Fv2-6665d63d95a38085a4a71e3ebe494373_r.jpg&refer=http%3A%2F%2Fpic4.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1639833241&t=4d703987991b482e2de4b461ac4be5ae">
 <meta property="article:published_time" content="2021-11-17T14:20:24.000Z">
-<meta property="article:modified_time" content="2021-11-18T14:56:18.872Z">
+<meta property="article:modified_time" content="2021-11-19T11:13:54.986Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2018.cnblogs.com%2Fblog%2F1079834%2F201812%2F1079834-20181224102341574-1775152914.png&refer=http%3A%2F%2Fimg2018.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1639830034&t=ddb5f09d846b96f80cd5d1a6350de181">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-18 22:56:18" itemprop="dateModified" datetime="2021-11-18T22:56:18+08:00">2021-11-18</time>
+                <time title="修改时间：2021-11-19 19:13:54" itemprop="dateModified" datetime="2021-11-19T19:13:54+08:00">2021-11-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
 
 <h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p><strong>有了镜像才可以创建容器,下载一个centos容器</strong></p>
 <p><strong>新建容器并启动</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run [可选参数] 镜像</span><br><span class="line"><span class="meta">#</span><span class="bash">参数</span></span><br><span class="line">--name=&quot;name&quot;  #容器名字，用来区分容器</span><br><span class="line">-d 	#后台运行</span><br><span class="line">-it #使用交互方式运行，进入容器查看内容</span><br><span class="line">-p 	#指定容器端口  -p 8080(主机端口):8080(容器端口)</span><br><span class="line">-P 	#随机指定端口</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">测试，启动并进入容器</span></span><br><span class="line">[root@localhost /]# docker run -it centos /bin/bash</span><br><span class="line">[root@8144c79a08f8 /]# ls</span><br><span class="line">bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run [可选参数] 镜像</span><br><span class="line"><span class="meta">#</span><span class="bash">参数</span></span><br><span class="line">--namename  #容器名字，用来区分容器</span><br><span class="line">-d 	#后台运行</span><br><span class="line">-it #使用交互方式运行，进入容器查看内容</span><br><span class="line">-p 	#指定容器端口  -p 8080(主机端口):8080(容器端口)</span><br><span class="line">-P 	#随机指定端口</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">测试，启动并进入容器</span></span><br><span class="line">[root@localhost /]# docker run -it centos /bin/bash</span><br><span class="line">[root@8144c79a08f8 /]# ls</span><br><span class="line">bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span><br></pre></td></tr></table></figure>
 
 <p><strong>列出所有容器</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker ps #查看当前正在运行的容器</span><br><span class="line"><span class="meta">#</span><span class="bash">参数</span></span><br><span class="line">-a 		#查看所有容器，包括正在运行的和停止</span><br><span class="line">-n=1 	#查看最近启动的一个容器</span><br><span class="line">-q		#只显示容器的编号</span><br></pre></td></tr></table></figure>
@@ -331,9 +331,30 @@
 <p><strong>拷贝文件(从容器内拷贝到外部)</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 容器id:/home/helloworld.java /home</span><br></pre></td></tr></table></figure>
 
+<p><strong>查看容器占用资源状态</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br><span class="line">CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS</span><br><span class="line">a04455034ef3   ecstatic_buck   0.00%     536KiB / 3.682GiB   0.01%     656B / 0B   0B / 0B     1</span><br></pre></td></tr></table></figure>
 
 
-<h2 id="Doker镜像"><a href="#Doker镜像" class="headerlink" title="Doker镜像"></a>Doker镜像</h2><h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h2 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h2><h2 id="Docker网络原理"><a href="#Docker网络原理" class="headerlink" title="Docker网络原理"></a>Docker网络原理</h2><h2 id="IDEA整合Docker"><a href="#IDEA整合Docker" class="headerlink" title="IDEA整合Docker"></a>IDEA整合Docker</h2><h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
+
+<h2 id="Doker镜像"><a href="#Doker镜像" class="headerlink" title="Doker镜像"></a>Doker镜像</h2><p><strong>镜像是什么</strong></p>
+<p>镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有的内容，包含代码、运行时库、环境变量和配置文件</p>
+<p>所有应用直接打包</p>
+<p>如何得到镜像</p>
+<ul>
+<li>远程仓库下载</li>
+<li>从别的地方拷贝</li>
+<li>自己打包镜像</li>
+</ul>
+<p><strong>docker镜像的加载原理</strong></p>
+<p><strong>联合文件系统</strong></p>
+<p><strong>如何打包镜像</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1、启动一个tomcat镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2、进入tomcat容器，拷贝文件 cp -r webapps.dist/* webapps</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3、提交镜像  docker commit -a=<span class="string">&quot;hdlnn&quot;</span> -m=<span class="string">&quot;add webapps&quot;</span> a1c6b4319aa5 tomcat02</span></span><br><span class="line">	-a:镜像作者</span><br><span class="line">	-m:提交信息</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h2 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h2><h2 id="Docker网络原理"><a href="#Docker网络原理" class="headerlink" title="Docker网络原理"></a>Docker网络原理</h2><h2 id="IDEA整合Docker"><a href="#IDEA整合Docker" class="headerlink" title="IDEA整合Docker"></a>IDEA整合Docker</h2><h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
     </div>
 
     
