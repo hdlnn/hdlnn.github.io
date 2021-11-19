@@ -263,7 +263,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-19 19:13:54" itemprop="dateModified" datetime="2021-11-19T19:13:54+08:00">2021-11-19</time>
+                <time title="修改时间：2021-11-20 00:14:51" itemprop="dateModified" datetime="2021-11-20T00:14:51+08:00">2021-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -410,8 +410,7 @@
 
 
 
-<h2 id="Doker镜像"><a href="#Doker镜像" class="headerlink" title="Doker镜像"></a>Doker镜像</h2><p><strong>镜像是什么</strong></p>
-<p>镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有的内容，包含代码、运行时库、环境变量和配置文件</p>
+<h2 id="Doker镜像"><a href="#Doker镜像" class="headerlink" title="Doker镜像"></a>Doker镜像</h2><h3 id="镜像是什么"><a href="#镜像是什么" class="headerlink" title="镜像是什么"></a><strong>镜像是什么</strong></h3><p>镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有的内容，包含代码、运行时库、环境变量和配置文件</p>
 <p>所有应用直接打包</p>
 <p>如何得到镜像</p>
 <ul>
@@ -419,16 +418,86 @@
 <li>从别的地方拷贝</li>
 <li>自己打包镜像</li>
 </ul>
-<p><strong>docker镜像的加载原理</strong></p>
-<p><strong>联合文件系统</strong></p>
-<p><strong>如何打包镜像</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1、启动一个tomcat镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2、进入tomcat容器，拷贝文件 cp -r webapps.dist/* webapps</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3、提交镜像  docker commit -a=<span class="string">&quot;hdlnn&quot;</span> -m=<span class="string">&quot;add webapps&quot;</span> a1c6b4319aa5 tomcat02</span></span><br><span class="line">	-a:镜像作者</span><br><span class="line">	-m:提交信息</span><br></pre></td></tr></table></figure>
+<h3 id="docker镜像的加载原理"><a href="#docker镜像的加载原理" class="headerlink" title="docker镜像的加载原理"></a><strong>docker镜像的加载原理</strong></h3><h3 id="联合文件系统"><a href="#联合文件系统" class="headerlink" title="联合文件系统"></a><strong>联合文件系统</strong></h3><h3 id="如何打包镜像"><a href="#如何打包镜像" class="headerlink" title="如何打包镜像"></a><strong>如何打包镜像</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1、启动一个tomcat镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2、进入tomcat容器，拷贝文件 cp -r webapps.dist/* webapps</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3、提交镜像  docker commit -a=<span class="string">&quot;hdlnn&quot;</span> -m=<span class="string">&quot;add webapps&quot;</span> a1c6b4319aa5 tomcat02</span></span><br><span class="line">	-a:镜像作者</span><br><span class="line">	-m:提交信息</span><br></pre></td></tr></table></figure>
 
 
 
+<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><p><strong>如果数据都在容器中，那么我们删除容器，数据就会丢失！所以，我们需要将数据持久化</strong></p>
+<p><strong>我们需要有一个数据共享的技术！将docker容器产生的数据同步到本地，这就是卷技术，docker的实现方式就是将数据卷挂载的</strong></p>
+<p><strong>Linux上</strong></p>
+<h3 id="数据卷挂载"><a href="#数据卷挂载" class="headerlink" title="数据卷挂载"></a><strong>数据卷挂载</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -v 宿主机目录:容器目录</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将tomcat容器下的/usr/<span class="built_in">local</span>/tomcat目录挂载在home目录下</span></span><br><span class="line">docker run -p 8080:8080 -d -v /home/:/usr/local/tomcat 镜像id</span><br></pre></td></tr></table></figure>
+
+<h3 id="具名挂载和匿名挂载"><a href="#具名挂载和匿名挂载" class="headerlink" title="具名挂载和匿名挂载"></a><strong>具名挂载和匿名挂载</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">匿名挂载，我们在挂载数据卷的时候只写了容器内的路径</span></span><br><span class="line">-v 容器内路径</span><br><span class="line">docker run -v 容器内路径</span><br><span class="line"><span class="meta">#</span><span class="bash">具名挂载</span></span><br><span class="line">-v 卷名:容器路径</span><br><span class="line">docker run -v 卷名:容器路径</span><br><span class="line"><span class="meta">#</span><span class="bash">指定路径挂载</span></span><br><span class="line">-v 宿主机路径:容器路径</span><br><span class="line">docker run -v 宿主机路径:容器路径</span><br><span class="line"><span class="meta">#</span><span class="bash">没有指定宿主机的路径的情况下都是在/var/lib/docker/volumes/卷名/_data</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">拓展</span></span><br><span class="line">docker run -p 8080:8080 -d -v /home/:/usr/local/tomcat:ro 镜像id  只读</span><br><span class="line">docker run -p 8080:8080 -d -v /home/:/usr/local/tomcat:ro 镜像id  可读可写</span><br><span class="line"><span class="meta">#</span><span class="bash">一旦设置了容器的只读权限，就只能在宿主机进行修改了</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="初始DockerFile"><a href="#初始DockerFile" class="headerlink" title="初始DockerFile"></a>初始DockerFile</h3><p><strong>DockerFile就是用来构建docker镜像的构建文件,命令脚本，通过脚本可以生成镜像，镜像是一层一层的，每个命令都是一层</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">编写dockerfile vim dockerfile</span></span><br><span class="line">FROM centos</span><br><span class="line">VOLUME [&quot;volume1&quot;,&quot;volume2&quot;] #匿名挂载</span><br><span class="line">CMD echo &quot;-----end------&quot;</span><br><span class="line">CMD /bin/bash</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">通过docker build构建镜像</span></span><br><span class="line">docker build -f dockerfile -t myimage:1.0 .  #注意最后一个点不能省略</span><br></pre></td></tr></table></figure>
 
 
-<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h2 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h2><h2 id="Docker网络原理"><a href="#Docker网络原理" class="headerlink" title="Docker网络原理"></a>Docker网络原理</h2><h2 id="IDEA整合Docker"><a href="#IDEA整合Docker" class="headerlink" title="IDEA整合Docker"></a>IDEA整合Docker</h2><h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
+
+<h2 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h2><h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识:"></a>基础知识:</h3><ol>
+<li><strong>每个保留关键字(指令)都是必须是大写字母</strong></li>
+<li><strong>执行从上到下</strong></li>
+<li><strong>#表示注释</strong></li>
+<li><strong>每一个指令都会创建提交一个新的镜像层</strong></li>
+<li><strong>dockerfile:构建文件，定义了一切的步骤，源代码</strong></li>
+</ol>
+<h3 id="构建步骤："><a href="#构建步骤：" class="headerlink" title="构建步骤："></a>构建步骤：</h3><p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fjavaquan.com%2Ffile%2Fimage%2F20191104%2F2019110418000166619771.JPG&refer=http%3A%2F%2Fjavaquan.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1639918115&t=8e38982f751d6415f1f66489f3993d4a" alt="img"></p>
+<p><strong>1.编写DockerFile文件</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FROM	#基础镜像，一切从这里开始构建</span><br><span class="line">MANITAINER	#镜像是谁写的，姓名+邮箱</span><br><span class="line">RUN		#构建镜像的时候需要运行的命令</span><br><span class="line">ADD		#步骤：添加内容</span><br><span class="line">WORKDIR #镜像的工作目录</span><br><span class="line">WOLUME 	#挂载的目录</span><br><span class="line">EXPOSE 	#保留端口配置</span><br><span class="line">CMD		#指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代</span><br><span class="line">ENTRYPOINT	#指定这个容器启动的时候要运行的命令</span><br><span class="line">ONBUILD	#当构建一个被继承的DockerFile这个时候就会运行ONBUILD的指令。触发指令</span><br><span class="line">COPY	#类似add，将我们的文件拷贝到镜像中</span><br><span class="line">ENV		#构建的时候设置环境变量</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.实战:构建一个centos</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">MANITAINER hdlnn&lt;xxxxx@qq.com&gt;</span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line">RUN yum -y install vim</span><br><span class="line">RUN yum -y install net-tools</span><br><span class="line">EXPOSE 80</span><br><span class="line">CMD echo $MYPATH</span><br><span class="line">CMD echo &quot;---end---&quot;</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>3</strong>.<strong>docker build构建成为一个镜像</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -f dockerfile -t myimage:1.0 .  #注意最后一个点不能省略</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.tomcat实战</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">#作者</span><br><span class="line">MAINTAINER qizhi 894528698@qq.com</span><br><span class="line">#拷贝tomcat jdk 到镜像并解压</span><br><span class="line">ADD apache-tomcat-8.5.30.tar.gz /usr/local/tomcat</span><br><span class="line">ADD jdk-8u202-linux-x64.tar.gz /usr/local/jdk</span><br><span class="line">#定义交互时登录路径</span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line">#配置jdk 和tomcat环境变量</span><br><span class="line">ENV JAVA_HOME /usr/local/jdk/jdk1.8.0_202</span><br><span class="line">ENV CATALINA_HOME /usr/local/tomcat/apache-tomcat-8.5.30</span><br><span class="line">ENV CATALINA_BASE /usr/local/tomcat/apache-tomcat-8.5.30</span><br><span class="line">ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line">ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin</span><br><span class="line">#设置暴露的端口</span><br><span class="line">EXPOSE 8080</span><br><span class="line">#运行tomcat</span><br><span class="line">CMD /usr/local/tomcat/apache-tomcat-8.5.30/bin/startup.sh &amp;&amp; tail -f /usr/local/tomcat/apache-tomcat-8.5.30/logs/catalina.out</span><br></pre></td></tr></table></figure>
+
+<p><strong>5.发布镜像</strong></p>
+<p>1、地址hub.docker.com注册自己的账号</p>
+<p>2、确定这个账号可以登录</p>
+<p>3、在我们的服务器上提交镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker login -u xxx</span><br><span class="line">docker push hdlnn/myimage [tag]</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.在阿里云上发布镜像</strong></p>
+<ol>
+<li>登录阿里云</li>
+<li>找到容器镜像服务</li>
+<li>创建命名空间</li>
+<li>创建容器服务</li>
+<li>浏览阿里云，看如何发布镜像的文档</li>
+</ol>
+<p>7.<strong>总结</strong></p>
+<h2 id="Docker网络原理"><a href="#Docker网络原理" class="headerlink" title="Docker网络原理"></a>Docker网络原理</h2><h3 id="原理图"><a href="#原理图" class="headerlink" title="原理图:"></a>原理图:</h3><p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg-blog.csdnimg.cn%2Fimg_convert%2Fa717b0b9ae875748400f6d6aede3c871.png&refer=http%3A%2F%2Fimg-blog.csdnimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1639925160&t=909c3ce9b2e984a9e90b86f25d1292f7" alt="img"></p>
+<p><strong>veth-pair技术</strong></p>
+<p><strong>默认启动一个docker，会启动一个网桥docker0，docker0充当一个路由器的功能，容器A访问容器B的先通过访问网桥，在路由到容器b</strong></p>
+<h3 id="–link"><a href="#–link" class="headerlink" title="–link"></a>–link</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run tomcat --name tomcat02 --link tomcat01 tomcat</span><br><span class="line"><span class="meta">#</span><span class="bash">通过tomcat02可以ping通tomcat01，但是反向不可以</span></span><br><span class="line"><span class="meta">#</span><span class="bash">原理</span></span><br><span class="line">在tomcat02的容器的/etc/hosts文件下写入了 [tomcat01的ip] tomcat01</span><br><span class="line">我们现在已经不建议使用--link</span><br><span class="line">docker0的问题:他不支持容器名连接访问</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义网络"><a href="#自定义网络" class="headerlink" title="自定义网络"></a>自定义网络</h3><p><strong>网络模式</strong></p>
+<ol>
+<li><strong>bridge:桥接(docker默认)</strong></li>
+<li><strong>none:不配置网络</strong></li>
+<li><strong>host:和宿主机共享网络</strong></li>
+<li><strong>container:容器网络连通(用的少！局限很大)</strong></li>
+</ol>
+<p><strong>创建自定义网络</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver bridge --subnet 192.168.0.0/16 --getway 192.168.0.1 mynet</span><br><span class="line">docker run -d -P --name tomcat01 -net mynet tomcat #指定网络启动</span><br><span class="line">#自定义的网络docker都已经帮我们帮我们为好了对应的关系</span><br><span class="line">#搭建集群使用不同的网络，保证集群是安全和健康的</span><br></pre></td></tr></table></figure>
+
+<p><strong>将不同网段的容器连通</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network connet 容器名 网卡</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="docker搭建redis高可用集群"><a href="#docker搭建redis高可用集群" class="headerlink" title="docker搭建redis高可用集群"></a>docker搭建redis高可用集群</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">创建网卡</span></span><br><span class="line">docker network create --driver bridge --subnet 172.38.0.0/16 --getway 172.38.0. redis</span><br><span class="line"></span><br><span class="line">for port in $(seq 1 6); \</span><br><span class="line">do \</span><br><span class="line">mkdir -p /mydata/redis/node-$&#123;port&#125;/conf</span><br><span class="line">touch /mydata/redis/node-$&#123;port&#125;/conf/redis.conf</span><br><span class="line">cat  EOF /mydata/redis/node-$&#123;port&#125;/conf/redis.conf</span><br><span class="line">port 6379 </span><br><span class="line">bind 0.0.0.0</span><br><span class="line">cluster-enabled yes </span><br><span class="line">cluster-config-file nodes.conf</span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">cluster-announce-ip 172.38.0.1$&#123;port&#125;</span><br><span class="line">cluster-announce-port 6379</span><br><span class="line">cluster-announce-bus-port 16379</span><br><span class="line">appendonly yes</span><br><span class="line">EOF</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">docker run -p 6371:6379 -p 16371:16379 --name redis-1 \</span><br><span class="line">    -v /mydata/redis/node-1/data:/data \</span><br><span class="line">    -v /mydata/redis/node-1/conf/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">    -d --net redis --ip 172.38.0.11 redis:5.0.9-alpine3.11 redis-server /etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="IDEA整合Docker"><a href="#IDEA整合Docker" class="headerlink" title="IDEA整合Docker"></a>IDEA整合Docker</h2><h3 id="docker打包springboot项目"><a href="#docker打包springboot项目" class="headerlink" title="docker打包springboot项目"></a>docker打包springboot项目</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.将项目达成jar包</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">2.编写Dockerfile</span></span><br><span class="line">FROM java:8</span><br><span class="line">COPY *.jar /app/jar</span><br><span class="line">CMD [&quot;--server.port=8080&quot;]</span><br><span class="line">EXPOSE 8080</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;app.jar&quot;]</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">3.构建docker镜像</span></span><br><span class="line">docker buiild -t hdlnn .</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">4.启动镜像</span></span><br><span class="line">docker run -d -P --name hdlnn01 hdlnn</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
       
     </div>
 
