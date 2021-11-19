@@ -232,7 +232,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/17/docker/docker/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/17/docker/docker%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -246,7 +246,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/17/docker/docker/" class="post-title-link" itemprop="url">docker</a>
+            <a href="/2021/11/17/docker/docker%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">docker基础</a>
         </h2>
 
         <div class="post-meta">
@@ -263,7 +263,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-20 00:14:51" itemprop="dateModified" datetime="2021-11-20T00:14:51+08:00">2021-11-20</time>
+                <time title="修改时间：2021-11-20 00:23:11" itemprop="dateModified" datetime="2021-11-20T00:23:11+08:00">2021-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -429,7 +429,7 @@
 
 <h3 id="具名挂载和匿名挂载"><a href="#具名挂载和匿名挂载" class="headerlink" title="具名挂载和匿名挂载"></a><strong>具名挂载和匿名挂载</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">匿名挂载，我们在挂载数据卷的时候只写了容器内的路径</span></span><br><span class="line">-v 容器内路径</span><br><span class="line">docker run -v 容器内路径</span><br><span class="line"><span class="meta">#</span><span class="bash">具名挂载</span></span><br><span class="line">-v 卷名:容器路径</span><br><span class="line">docker run -v 卷名:容器路径</span><br><span class="line"><span class="meta">#</span><span class="bash">指定路径挂载</span></span><br><span class="line">-v 宿主机路径:容器路径</span><br><span class="line">docker run -v 宿主机路径:容器路径</span><br><span class="line"><span class="meta">#</span><span class="bash">没有指定宿主机的路径的情况下都是在/var/lib/docker/volumes/卷名/_data</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">拓展</span></span><br><span class="line">docker run -p 8080:8080 -d -v /home/:/usr/local/tomcat:ro 镜像id  只读</span><br><span class="line">docker run -p 8080:8080 -d -v /home/:/usr/local/tomcat:ro 镜像id  可读可写</span><br><span class="line"><span class="meta">#</span><span class="bash">一旦设置了容器的只读权限，就只能在宿主机进行修改了</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="初始DockerFile"><a href="#初始DockerFile" class="headerlink" title="初始DockerFile"></a>初始DockerFile</h3><p><strong>DockerFile就是用来构建docker镜像的构建文件,命令脚本，通过脚本可以生成镜像，镜像是一层一层的，每个命令都是一层</strong></p>
+<h3 id="初识DockerFile"><a href="#初识DockerFile" class="headerlink" title="初识DockerFile"></a>初识DockerFile</h3><p><strong>DockerFile就是用来构建docker镜像的构建文件,命令脚本，通过脚本可以生成镜像，镜像是一层一层的，每个命令都是一层</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">编写dockerfile vim dockerfile</span></span><br><span class="line">FROM centos</span><br><span class="line">VOLUME [&quot;volume1&quot;,&quot;volume2&quot;] #匿名挂载</span><br><span class="line">CMD echo &quot;-----end------&quot;</span><br><span class="line">CMD /bin/bash</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">通过docker build构建镜像</span></span><br><span class="line">docker build -f dockerfile -t myimage:1.0 .  #注意最后一个点不能省略</span><br></pre></td></tr></table></figure>
 
 
