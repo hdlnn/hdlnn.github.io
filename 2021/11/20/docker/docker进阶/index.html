@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Docker ComposeDocker SwarmCI\CD Jenkins">
+  <meta name="description" content="Docker Composedocker docker build run 手动操作，单个容器 微服务，100个微服务，依赖关系 docker compose来轻松高效的管理容器，定义运行多个容器 官方介绍 定义、运行多个容器 YAML file配置文件 Ssingle command命令有哪些 Compose is a tool for defining and running multi-co">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker进阶">
 <meta property="og:url" content="http://example.com/2021/11/20/docker/docker%E8%BF%9B%E9%98%B6/index.html">
 <meta property="og:site_name" content="核动力niuniu">
-<meta property="og:description" content="Docker ComposeDocker SwarmCI\CD Jenkins">
+<meta property="og:description" content="Docker Composedocker docker build run 手动操作，单个容器 微服务，100个微服务，依赖关系 docker compose来轻松高效的管理容器，定义运行多个容器 官方介绍 定义、运行多个容器 YAML file配置文件 Ssingle command命令有哪些 Compose is a tool for defining and running multi-co">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-19T16:26:24.000Z">
-<meta property="article:modified_time" content="2021-11-19T16:26:08.338Z">
+<meta property="article:modified_time" content="2021-11-21T11:40:43.596Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
 
@@ -177,10 +177,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-20 00:26:24 / 修改时间：00:26:08" itemprop="dateCreated datePublished" datetime="2021-11-20T00:26:24+08:00">2021-11-20</time>
+              <time title="创建时间：2021-11-20 00:26:24" itemprop="dateCreated datePublished" datetime="2021-11-20T00:26:24+08:00">2021-11-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-21 19:40:43" itemprop="dateModified" datetime="2021-11-21T19:40:43+08:00">2021-11-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -202,7 +208,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
+        <h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><p>docker</p>
+<p>docker build run 手动操作，单个容器</p>
+<p>微服务，100个微服务，依赖关系</p>
+<p>docker compose来轻松高效的管理容器，定义运行多个容器</p>
+<p>官方介绍</p>
+<p>定义、运行多个容器</p>
+<p>YAML file配置文件</p>
+<p>Ssingle command命令有哪些</p>
+<p>Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. To learn more about all the features of Compose, see <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/#features">the list of features</a>.</p>
+<p>Compose works in all environments: production, staging, development, testing, as well as CI workflows. You can learn more about each case in <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/#common-use-cases">Common Use Cases</a>.</p>
+<p>Using Compose is basically a three-step process:</p>
+<ol>
+<li>Define your app’s environment with a <code>Dockerfile</code> so it can be reproduced anywhere.</li>
+<li>dockerfile保证我们的项目在任何地方可以运行</li>
+<li>Define the services that make up your app in <code>docker-compose.yml</code> so they can be run together in an isolated environment.</li>
+<li>services什么是服务</li>
+<li>docker-compose.yaml这个文件怎么写</li>
+<li>Run <code>docker compose up</code> and the <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/cli-command/">Docker compose command</a> starts and runs your entire app. You can alternatively run <code>docker-compose up</code> using the docker-compose binary.</li>
+<li>启动项目</li>
+</ol>
+<p>A <code>docker-compose.yml</code> looks like this:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.9&quot;</span>  <span class="comment"># optional since v1.27.0</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5000:5000&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">.:/code</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">logvolume01:/var/log</span></span><br><span class="line">    <span class="attr">links:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">logvolume01:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>作用：批量容器编排</p>
+<p>compose是docker官方的开源项目，需要安装</p>
+<p>dockerfile让程序在任何地方运行。web服务，redis，mysql，nginx多个容器</p>
+<p>compose的重要概念</p>
+<ul>
+<li>services：容器，应用(web，redis，mysql)</li>
+<li>项目project：一组关联的容器</li>
+</ul>
+<p>集群的方式部署，4台机器</p>
+<p>安装</p>
+<p>1.下载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="CI-CD-Jenkins"><a href="#CI-CD-Jenkins" class="headerlink" title="CI\CD Jenkins"></a>CI\CD Jenkins</h2>
     </div>
 
     
@@ -217,8 +261,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/11/17/springcloud/eureka/eureka/" rel="prev" title="eureka配置">
-      <i class="fa fa-chevron-left"></i> eureka配置
+    <a href="/2021/11/17/springcloud/eureka/eureka/" rel="prev" title="eureka">
+      <i class="fa fa-chevron-left"></i> eureka
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -279,7 +323,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Compose"><span class="nav-number">1.</span> <span class="nav-text">Docker Compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Swarm"><span class="nav-number">2.</span> <span class="nav-text">Docker Swarm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-CD-Jenkins"><span class="nav-number">3.</span> <span class="nav-text">CI\CD Jenkins</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Compose"><span class="nav-number">1.</span> <span class="nav-text">Docker Compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-CD-Jenkins"><span class="nav-number">2.</span> <span class="nav-text">CI\CD Jenkins</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
