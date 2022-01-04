@@ -27,16 +27,16 @@
 <meta property="og:site_name" content="核动力niuniu">
 <meta property="og:description" content="kubernetes集群环境搭建前置知识点目前生产部署Kubernetes 集群主要有两种方式： kubeadm Kubeadm 是一个K8s 部署工具，提供kubeadm init 和kubeadm join，用于快速部署Kubernetes 集群。 官方地址：https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;reference&#x2F;setup-tools&#x2F;kubeadm&#x2F;kubeadm&#x2F; 二进">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200404094800622.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210609000002940.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233106024-1676033717.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233130477-111035427.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233157075-1117518703.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200404094800622.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210609000002940.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233106024-1676033717.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233130477-111035427.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233157075-1117518703.png">
 <meta property="article:published_time" content="2022-01-04T13:20:24.000Z">
-<meta property="article:modified_time" content="2022-01-04T14:39:22.662Z">
+<meta property="article:modified_time" content="2022-01-04T17:28:12.166Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200404094800622.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200404094800622.png">
 
 <link rel="canonical" href="http://example.com/2022/01/04/k8s%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/2.kubernetes%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
@@ -183,10 +183,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-01-04 21:20:24 / 修改时间：22:39:22" itemprop="dateCreated datePublished" datetime="2022-01-04T21:20:24+08:00">2022-01-04</time>
+              <time title="创建时间：2022-01-04 21:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T21:20:24+08:00">2022-01-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 01:28:12" itemprop="dateModified" datetime="2022-01-05T01:28:12+08:00">2022-01-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -215,7 +221,7 @@
 <p><strong>二进制包</strong></p>
 <p>从github 下载发行版的二进制包，手动部署每个组件，组成Kubernetes 集群。</p>
 <p>Kubeadm 降低部署门槛，但屏蔽了很多细节，遇到问题很难排查。如果想更容易可控，推荐使用二进制包部署Kubernetes 集群，虽然手动部署麻烦点，期间可以学习很多工作原理，也利于后期维护。</p>
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200404094800622.png" alt="image-20200404094800622"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200404094800622.png" alt="image-20200404094800622"></p>
 <h4 id="kubeadm-部署方式介绍"><a href="#kubeadm-部署方式介绍" class="headerlink" title="kubeadm 部署方式介绍"></a>kubeadm 部署方式介绍</h4><p>kubeadm 是官方社区推出的一个用于快速部署kubernetes 集群的工具，这个工具能通过两条指令完成一个kubernetes 集群的部署：</p>
 <ul>
 <li>创建一个Master 节点kubeadm init</li>
@@ -236,7 +242,7 @@
 <li>部署Kubernetes Node，将节点加入Kubernetes 集群中</li>
 <li>部署Dashboard Web 页面，可视化查看Kubernetes 资源</li>
 </ul>
-<h4 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h4><p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210609000002940.png" alt="image-20210609000002940"></p>
+<h4 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h4><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210609000002940.png" alt="image-20210609000002940"></p>
 <table>
 <thead>
 <tr>
@@ -308,7 +314,7 @@
 <p>由于外网不好访问，如果出现无法访问的情况，可以直接用下面的 记得文件名是kube-flannel.yml，位置：/root/kube-flannel.yml内容：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/flannel<span class="literal">-io</span>/flannel/tree/master/Documentation/kube<span class="literal">-flannel</span>.yml</span><br></pre></td></tr></table></figure>
 
-<p>![截屏2021-10-01 下午10.23.00](<a target="_blank" rel="noopener" href="http://152.136.113.120/hexo_images/k8s/images/%E6%88%AA%E5%B1%8F2021-10-01">http://152.136.113.120/hexo_images/k8s/images/截屏2021-10-01</a> 下午10.23.00.png)</p>
+<p>![截屏2021-10-01 下午10.23.00](<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/%E6%88%AA%E5%B1%8F2021-10-01">https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/截屏2021-10-01</a> 下午10.23.00.png)</p>
 <h5 id="使用kubeadm-reset重置集群"><a href="#使用kubeadm-reset重置集群" class="headerlink" title="使用kubeadm reset重置集群"></a>使用kubeadm reset重置集群</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#在master节点之外的节点进行操作</span><br><span class="line">kubeadm reset</span><br><span class="line">systemctl stop kubelet</span><br><span class="line">systemctl stop docker</span><br><span class="line">rm -rf /var/lib/cni/</span><br><span class="line">rm -rf /var/lib/kubelet/*</span><br><span class="line">rm -rf /etc/cni/</span><br><span class="line">ifconfig cni0 down</span><br><span class="line">ifconfig flannel.1 down</span><br><span class="line">ifconfig docker0 down</span><br><span class="line">ip link delete cni0</span><br><span class="line">ip link delete flannel.1</span><br><span class="line">##重启kubelet</span><br><span class="line">systemctl restart kubelet</span><br><span class="line">##重启docker</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
 
 <h5 id="重启kubelet和docker"><a href="#重启kubelet和docker" class="headerlink" title="重启kubelet和docker"></a>重启kubelet和docker</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启kubelet</span></span><br><span class="line">systemctl restart kubelet</span><br><span class="line"><span class="comment"># 重启docker</span></span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
@@ -317,7 +323,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply <span class="operator">-f</span> kube<span class="literal">-flannel</span>.yml</span><br></pre></td></tr></table></figure>
 
 <p>等待它安装完毕 发现已经是 集群的状态已经是Ready</p>
-<p><img src="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233106024-1676033717.png" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233106024-1676033717.png" alt="img"></p>
 <h5 id="kubeadm中的命令"><a href="#kubeadm中的命令" class="headerlink" title="kubeadm中的命令"></a>kubeadm中的命令</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 新的token</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">master</span> ~]<span class="comment"># kubeadm token create --print-join-command</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="集群测试"><a href="#集群测试" class="headerlink" title="集群测试"></a>集群测试</h4><h5 id="创建一个nginx服务"><a href="#创建一个nginx服务" class="headerlink" title="创建一个nginx服务"></a>创建一个nginx服务</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment nginx  -<span class="literal">-image</span>=nginx:<span class="number">1.14</span><span class="literal">-alpine</span></span><br></pre></td></tr></table></figure>
@@ -326,9 +332,9 @@
 
 <h5 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod,svc</span><br></pre></td></tr></table></figure>
 
-<h5 id="查看pod"><a href="#查看pod" class="headerlink" title="查看pod"></a>查看pod</h5><p><img src="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233130477-111035427.png" alt="img"></p>
+<h5 id="查看pod"><a href="#查看pod" class="headerlink" title="查看pod"></a>查看pod</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233130477-111035427.png" alt="img"></p>
 <p>浏览器测试结果：</p>
-<p><img src="http://152.136.113.120/hexo_images/k8s/images/2232696-20210621233157075-1117518703.png" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/images/2232696-20210621233157075-1117518703.png" alt="img"></p>
 
     </div>
 

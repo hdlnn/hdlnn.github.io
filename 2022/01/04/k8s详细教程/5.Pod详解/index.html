@@ -27,19 +27,19 @@
 <meta property="og:site_name" content="核动力niuniu">
 <meta property="og:description" content="Pod详解Pod介绍Pod结构 每个Pod中都可以包含一个或者多个容器，这些容器可以分为两类：  用户程序所在的容器，数量可多可少  Pause容器，这是每个Pod都会有的一个根容器，它的作用有两个：  可以以它为依据，评估整个Pod的健康状态  可以在根容器上设置Ip地址，其它容器都此Ip（Pod IP），以实现Pod内部的网路通信 1这里是Pod内部的通讯，Pod的之间的通讯采用虚拟二层网络技">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617223823675-1626781695411.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617223923659.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617224457945.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617223823675-1626781695411.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617223923659.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617224457945.png">
 <meta property="og:image" content="d:/project/java/blog/source/_posts/k8s详细教程/Kubenetes.assets/image-20200412111402706-1626782188724.png">
 <meta property="og:image" content="d:/project/java/blog/source/_posts/k8s详细教程/Kubenetes.assets/image-20200406184656917-1626782168787.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200605021831545.png">
-<meta property="og:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200514095913741.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200605021831545.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200514095913741.png">
 <meta property="article:published_time" content="2022-01-04T10:20:24.000Z">
-<meta property="article:modified_time" content="2022-01-04T14:39:40.099Z">
+<meta property="article:modified_time" content="2022-01-04T17:28:07.147Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png">
 
 <link rel="canonical" href="http://example.com/2022/01/04/k8s%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/5.Pod%E8%AF%A6%E8%A7%A3/">
 
@@ -186,10 +186,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-01-04 18:20:24 / 修改时间：22:39:40" itemprop="dateCreated datePublished" datetime="2022-01-04T18:20:24+08:00">2022-01-04</time>
+              <time title="创建时间：2022-01-04 18:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T18:20:24+08:00">2022-01-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 01:28:07" itemprop="dateModified" datetime="2022-01-05T01:28:07+08:00">2022-01-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -211,7 +217,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="Pod详解"><a href="#Pod详解" class="headerlink" title="Pod详解"></a>Pod详解</h3><h4 id="Pod介绍"><a href="#Pod介绍" class="headerlink" title="Pod介绍"></a>Pod介绍</h4><h5 id="Pod结构"><a href="#Pod结构" class="headerlink" title="Pod结构"></a>Pod结构</h5><p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png" alt="image-20200407121501907"></p>
+        <h3 id="Pod详解"><a href="#Pod详解" class="headerlink" title="Pod详解"></a>Pod详解</h3><h4 id="Pod介绍"><a href="#Pod介绍" class="headerlink" title="Pod介绍"></a>Pod介绍</h4><h5 id="Pod结构"><a href="#Pod结构" class="headerlink" title="Pod结构"></a>Pod结构</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200407121501907-1626781151898.png" alt="image-20200407121501907"></p>
 <p>每个Pod中都可以包含一个或者多个容器，这些容器可以分为两类：</p>
 <ul>
 <li><p>用户程序所在的容器，数量可多可少</p>
@@ -253,7 +259,7 @@
 <h5 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h5><p>创建pod-base.yaml文件，内容如下：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-base</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">heima</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.17.1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox:1.30</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617223823675-1626781695411.png" alt="image-20210617223823675"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617223823675-1626781695411.png" alt="image-20210617223823675"></p>
 <p>上面定义了一个比较简单Pod的配置，里面有两个容器：</p>
 <ul>
 <li>nginx：用1.17.1版本的nginx镜像创建，（nginx是一个轻量级web容器）</li>
@@ -264,7 +270,7 @@
 <h5 id="镜像拉取"><a href="#镜像拉取" class="headerlink" title="镜像拉取"></a>镜像拉取</h5><p>创建pod-imagepullpolicy.yaml文件，内容如下：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-imagepullpolicy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.17.1</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">Never</span> <span class="comment"># 用于设置镜像拉取策略</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox:1.30</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617223923659.png" alt="image-20210617223923659"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617223923659.png" alt="image-20210617223923659"></p>
 <p>imagePullPolicy，用于设置镜像拉取策略，kubernetes支持配置三种拉取策略：</p>
 <ul>
 <li>Always：总是从远程仓库拉取镜像（一直远程下载）</li>
@@ -283,7 +289,7 @@
 <p>创建pod-command.yaml文件，内容如下：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-command</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.17.1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox:1.30</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-c&quot;</span>,<span class="string">&quot;touch /tmp/hello.txt;while true;do /bin/echo $(date +%T) &gt;&gt; /tmp/hello.txt; sleep 3; done;&quot;</span>]</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20210617224457945.png" alt="image-20210617224457945"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20210617224457945.png" alt="image-20210617224457945"></p>
 <p>command，用于在pod中的容器初始化完毕之后运行一个命令。</p>
 <blockquote>
 <p>稍微解释下上面命令的意思：</p>
@@ -572,7 +578,7 @@
 <li>NoSchedule：kubernetes将不会把Pod调度到具有该污点的Node上，但不会影响当前Node上已存在的Pod</li>
 <li>NoExecute：kubernetes将不会把Pod调度到具有该污点的Node上，同时也会将Node上已存在的Pod驱离</li>
 </ul>
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200605021831545.png" alt="image-20200605021606508"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200605021831545.png" alt="image-20200605021606508"></p>
 <p>使用kubectl设置和去除污点的命令示例如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置污点</span></span><br><span class="line">kubectl taint nodes node1 key=value:effect</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 去除污点</span></span><br><span class="line">kubectl taint nodes node1 key:effect-</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 去除所有污点</span></span><br><span class="line">kubectl taint nodes node1 key-</span><br></pre></td></tr></table></figure>
 
@@ -589,7 +595,7 @@
 
 <p><strong>容忍（Toleration）</strong></p>
 <p>上面介绍了污点的作用，我们可以在node上添加污点用于拒绝pod调度上来，但是如果就是想将一个pod调度到一个有污点的node上去，这时候应该怎么做呢？这就要使用到<strong>容忍</strong>。</p>
-<p><img src="http://152.136.113.120/hexo_images/k8s/Kubenetes.assets/image-20200514095913741.png" alt="image-20200514095913741"></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/k8s/Kubenetes.assets/image-20200514095913741.png" alt="image-20200514095913741"></p>
 <blockquote>
 <p>污点就是拒绝，容忍就是忽略，Node通过污点拒绝pod调度上去，Pod通过容忍忽略拒绝</p>
 </blockquote>
