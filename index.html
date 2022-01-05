@@ -715,7 +715,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 19:39:17" itemprop="dateModified" datetime="2022-01-05T19:39:17+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:23:49" itemprop="dateModified" datetime="2022-01-05T20:23:49+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -755,7 +755,7 @@
 <p>String类型是二进制安全的。意味着Redis的string可以包含任何数据。比如jpg图片或者序列化的对象。</p>
 <p>String类型是Redis最基本的数据类型，一个Redis中字符串value最多可以是512M</p>
 <h6 id="3-2-2-常用命令"><a href="#3-2-2-常用命令" class="headerlink" title="3.2.2 常用命令"></a>3.2.2 常用命令</h6><p>set  <key><value>添加键值对</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps5ib5ec.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps5ib5ec.jpg" alt="img"> </p>
 <p>*NX：当数据库中key不存在时，可以将key-value添加数据库</p>
 <p>*XX：当数据库中key存在时，可以将key-value添加数据库，与NX参数互斥</p>
 <p>*EX：key的超时秒数</p>
@@ -771,7 +771,7 @@
 <p>将 key 中储存的数字值减1</p>
 <p>只能对数字值操作，如果为空，新增值为-1</p>
 <p>incrby / decrby  <key>&lt;步长&gt;将 key 中储存的数字值增减。自定义步长。</p>
-<p>原子性<img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpszouWWt.png" alt="img"> 所谓原子操作是指不会被线程调度机制打断的操作；这种操作一旦开始，就一直运行到结束，中间不会有任何 context switch （切换到另一个线程）。（1）在单线程中， 能够在单条指令中完成的操作都可以认为是”原子操作”，因为中断只能发生于指令之间。（2）在多线程中，不能被其它进程（线程）打断的操作就叫原子操作。Redis单命令的原子性主要得益于Redis的单线程。案例：java中的i++是否是原子操作？不是i=0;两个线程分别对i进行++100次,值是多少？ 2~200i=0i++i=99 i=1 i++i=2i=0  i++ i=1 i++ i=100 </p>
+<p>原子性<img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszouWWt.png" alt="img"> 所谓原子操作是指不会被线程调度机制打断的操作；这种操作一旦开始，就一直运行到结束，中间不会有任何 context switch （切换到另一个线程）。（1）在单线程中， 能够在单条指令中完成的操作都可以认为是”原子操作”，因为中断只能发生于指令之间。（2）在多线程中，不能被其它进程（线程）打断的操作就叫原子操作。Redis单命令的原子性主要得益于Redis的单线程。案例：java中的i++是否是原子操作？不是i=0;两个线程分别对i进行++100次,值是多少？ 2~200i=0i++i=99 i=1 i++i=2i=0  i++ i=1 i++ i=100 </p>
 <blockquote>
 <p><strong>mset</strong>  <key1><value1><key2><value2>  ….. </p>
 <p>同时设置一个或多个 key-value对  </p>
@@ -790,12 +790,12 @@
 <p>以新换旧，设置了新值同时获得旧值。</p>
 </blockquote>
 <h6 id="3-2-3-数据结构"><a href="#3-2-3-数据结构" class="headerlink" title="3.2.3 数据结构"></a>3.2.3 数据结构</h6><p>String的数据结构为简单动态字符串(Simple Dynamic String,缩写SDS)。是可以修改的字符串，内部结构实现上类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配.</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsjwPzAS.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsjwPzAS.jpg" alt="img"> </p>
 <p>如图中所示，内部为当前字符串实际分配的空间capacity一般要高于实际字符串长度len。当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容时一次只会多扩1M的空间。需要注意的是字符串最大长度为512M。</p>
 <h5 id="3-3-Redis列表-List"><a href="#3-3-Redis列表-List" class="headerlink" title="3.3 Redis列表(List)"></a>3.3 Redis列表(List)</h5><h6 id="3-3-1-简介"><a href="#3-3-1-简介" class="headerlink" title="3.3.1 简介"></a>3.3.1 简介</h6><p>单键多值</p>
 <p>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。</p>
 <p>它的底层实际是个双向链表，对两端的操作性能很高，通过索引下标的操作中间的节点性能会较差。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsl87VGr.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsl87VGr.png" alt="img"> </p>
 <h6 id="3-3-2-常用命令"><a href="#3-3-2-常用命令" class="headerlink" title="3.3.2 常用命令"></a>3.3.2 常用命令</h6><blockquote>
 <p><strong>lpush/rpush</strong>  <key><value1><value2><value3> …. 从左边/右边插入一个或多个值。</p>
 <p><strong>lpop/rpop</strong>  <key>从左边/右边吐出一个值。值在键在，值光键亡。</p>
@@ -814,7 +814,7 @@
 <p>它将所有的元素紧挨着一起存储，分配的是一块连续的内存。</p>
 <p>当数据量比较多的时候才会改成quicklist。</p>
 <p>因为普通的链表需要的附加指针空间太大，会比较浪费空间。比如这个列表里存的只是int类型的数据，结构上还需要两个额外的指针prev和next。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsOLgubH.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsOLgubH.jpg" alt="img"> </p>
 <p>Redis将链表和ziplist结合起来组成了quicklist。也就是将多个ziplist使用双向指针串起来使用。这样既满足了快速的插入删除性能，又不会出现太大的空间冗余。</p>
 <h5 id="3-4-Redis集合-Set"><a href="#3-4-Redis集合-Set" class="headerlink" title="3.4 Redis集合(Set)"></a>3.4 Redis集合(Set)</h5><h6 id="3-4-1-简介"><a href="#3-4-1-简介" class="headerlink" title="3.4.1 简介"></a>3.4.1 简介</h6><p>Redis set对外提供的功能与list类似是一个列表的功能，特殊之处在于set是可以自动排重的，当你需要存储一个列表数据，又不希望出现重复数据时，set是一个很好的选择，并且set提供了判断某个成员是否在一个set集合内的重要接口，这个也是list所不能提供的。</p>
 <p>Redis的Set是string类型的无序集合。它底层其实是一个value为null的hash表，所以添加，删除，查找的复杂度都是O(1)。</p>
@@ -850,7 +850,7 @@
 <td></td>
 </tr>
 </tbody></table>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsrnOp1m.png" alt="img"> 通过 key(用户ID) + field(属性标签) 就可以操作对应属性数据了，既不需要重复存储数据，也不会带来序列化和并发修改控制的问题</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsrnOp1m.png" alt="img"> 通过 key(用户ID) + field(属性标签) 就可以操作对应属性数据了，既不需要重复存储数据，也不会带来序列化和并发修改控制的问题</p>
 <h6 id="3-5-2-常用命令"><a href="#3-5-2-常用命令" class="headerlink" title="3.5.2 常用命令"></a>3.5.2 常用命令</h6><blockquote>
 <p><strong>hset</strong> <key><field><value>给<key>集合中的  <field>键赋值<value></p>
 <p><strong>hget</strong> <key1><field>从<key1>集合<field>取出 value </p>
@@ -882,7 +882,7 @@
 <p>zrank <key><value>返回该值在集合中的排名，从0开始。</p>
 <p>案例：如何利用zset实现一个文章访问量的排行榜？</p>
 </blockquote>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps2DNHKu.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps2DNHKu.png" alt="img"> </p>
 <h6 id="3-6-3-数据结构"><a href="#3-6-3-数据结构" class="headerlink" title="3.6.3 数据结构"></a>3.6.3 数据结构</h6><p>SortedSet(zset)是Redis提供的一个非常特别的数据结构，一方面它等价于Java的数据结构Map&lt;String, Double&gt;，可以给每一个元素value赋予一个权重score，另一方面它又类似于TreeSet，内部的元素会按照权重score进行排序，可以得到每个元素的名次，还可以通过score的范围来获取元素的列表。</p>
 <p>zset底层使用了两个数据结构</p>
 <p>（1）hash，hash的作用就是关联元素value和权重score，保障元素value的唯一性，可以通过元素value找到相应的score值。</p>
@@ -892,10 +892,10 @@
 <p>2、实例</p>
 <p>​    对比有序链表和跳跃表，从链表中查询出51</p>
 <p>（1） 有序链表</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsMwAaVC.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsMwAaVC.jpg" alt="img"> </p>
 <p>要查找值为51的元素，需要从第一个元素开始依次查找、比较才能找到。共需要6次比较。</p>
 <p>（2） 跳跃表</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps7rEkBd.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps7rEkBd.jpg" alt="img"> </p>
 <p>从第2层开始，1节点比51节点小，向后比较。</p>
 <p>21节点比51节点小，继续向后比较，后面就是NULL了，所以从21节点向下到第1层</p>
 <p>在第1层，41节点比51节点小，继续向后，61节点比51节点大，所以从41向下</p>
