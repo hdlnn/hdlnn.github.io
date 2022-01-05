@@ -150,160 +150,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/10.Redis%E4%BA%8B%E5%8A%A1%E7%A7%92%E6%9D%80%E6%A1%88%E4%BE%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="核动力niuniu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="核动力niuniu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/10.Redis%E4%BA%8B%E5%8A%A1%E7%A7%92%E6%9D%80%E6%A1%88%E4%BE%8B/" class="post-title-link" itemprop="url">10.Redis_事务_秒杀案例</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-04 22:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T22:20:24+08:00">2022-01-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 19:50:18" itemprop="dateModified" datetime="2022-01-05T19:50:18+08:00">2022-01-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="十一、Redis-事务-秒杀案例"><a href="#十一、Redis-事务-秒杀案例" class="headerlink" title="十一、Redis_事务_秒杀案例"></a>十一、Redis_事务_秒杀案例</h4><h5 id="11-1-解决计数器和人员记录的事务操作"><a href="#11-1-解决计数器和人员记录的事务操作" class="headerlink" title="11.1 解决计数器和人员记录的事务操作"></a>11.1 解决计数器和人员记录的事务操作</h5><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsF6l7b4.png" alt="img"> </p>
-<h5 id="11-2-Redis事务–秒杀并发模拟"><a href="#11-2-Redis事务–秒杀并发模拟" class="headerlink" title="11.2 Redis事务–秒杀并发模拟"></a>11.2 Redis事务–秒杀并发模拟</h5><p>使用工具ab模拟测试</p>
-<p>CentOS6 默认安装</p>
-<p>CentOS7需要手动安装</p>
-<h6 id="11-2-1-联网：yum-install-httpd-tools"><a href="#11-2-1-联网：yum-install-httpd-tools" class="headerlink" title="11.2.1 联网：yum install httpd-tools"></a>11.2.1 联网：yum install httpd-tools</h6><h6 id="11-2-2-无网络"><a href="#11-2-2-无网络" class="headerlink" title="11.2.2 无网络"></a>11.2.2 无网络</h6><p>（1） 进入cd  /run/media/root/CentOS 7 x86_64/Packages（路径跟centos6不同）</p>
-<p>（2） 顺序安装</p>
-<p>apr-1.4.8-3.el7.x86_64.rpm</p>
-<p>apr-util-1.5.2-6.el7.x86_64.rpm</p>
-<p>httpd-tools-2.4.6-67.el7.centos.x86_64.rpm  </p>
-<h6 id="11-2-3-测试及结果"><a href="#11-2-3-测试及结果" class="headerlink" title="11.2.3 测试及结果"></a>11.2.3 测试及结果</h6><ul>
-<li>通过ab测试</li>
-</ul>
-<p>vim postfile 模拟表单提交参数,以&amp;符号结尾;存放当前目录。</p>
-<p>内容：prodid=0101&amp;</p>
-<p>ab -n 2000 -c 200 -k -p ~/postfile -T application/x-www-form-urlencoded <a target="_blank" rel="noopener" href="http://192.168.2.115:8081/Seckill/doseckill">http://192.168.2.115:8081/Seckill/doseckill</a></p>
-<ul>
-<li>超卖</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><img src="images/wpsYqJIJA.png" alt="img"></th>
-<th><img src="images/wpsdgdniw.png" alt="img"></th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h5 id="11-3-超卖问题"><a href="#11-3-超卖问题" class="headerlink" title="11.3 超卖问题"></a>11.3 超卖问题</h5><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsQ8oe0s.png" alt="img"> </p>
-<h5 id="11-4-利用乐观锁淘汰用户，解决超卖问题。"><a href="#11-4-利用乐观锁淘汰用户，解决超卖问题。" class="headerlink" title="11.4 利用乐观锁淘汰用户，解决超卖问题。"></a>11.4 利用乐观锁淘汰用户，解决超卖问题。</h5><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpskot0t5.png" alt="img"> </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//增加乐观锁</span></span><br><span class="line">jedis.watch(qtkey);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//3.判断库存</span></span><br><span class="line">String qtkeystr = jedis.get(qtkey);</span><br><span class="line"><span class="keyword">if</span>(qtkeystr==<span class="keyword">null</span> || <span class="string">&quot;&quot;</span>.equals(qtkeystr.trim())) &#123;</span><br><span class="line">System.out.println(<span class="string">&quot;未初始化库存&quot;</span>);</span><br><span class="line">jedis.close();</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">false</span> ;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> qt = Integer.parseInt(qtkeystr);</span><br><span class="line"><span class="keyword">if</span>(qt&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">System.err.println(<span class="string">&quot;已经秒光&quot;</span>);</span><br><span class="line">jedis.close();</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//增加事务</span></span><br><span class="line">Transaction multi = jedis.multi();</span><br><span class="line"> </span><br><span class="line"><span class="comment">//4.减少库存</span></span><br><span class="line"><span class="comment">//jedis.decr(qtkey);</span></span><br><span class="line">multi.decr(qtkey);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//5.加人</span></span><br><span class="line"><span class="comment">//jedis.sadd(usrkey, uid);</span></span><br><span class="line">multi.sadd(usrkey, uid);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//执行事务</span></span><br><span class="line">List&lt;Object&gt; list = multi.exec();</span><br><span class="line"> </span><br><span class="line"><span class="comment">//判断事务提交是否失败</span></span><br><span class="line"><span class="keyword">if</span>(list==<span class="keyword">null</span> || list.size()==<span class="number">0</span>) &#123;</span><br><span class="line">System.out.println(<span class="string">&quot;秒杀失败&quot;</span>);</span><br><span class="line">jedis.close();</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">System.err.println(<span class="string">&quot;秒杀成功&quot;</span>);</span><br><span class="line">jedis.close();</span><br></pre></td></tr></table></figure>
-
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/image-20211106212045210.png" alt="image-20211106212045210"></p>
-<img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/image-20211106212111139.png" alt="image-20211106212111139" style="zoom:15%;" />
-
-
-
-<h5 id="11-5-继续增加并发测试"><a href="#11-5-继续增加并发测试" class="headerlink" title="11.5 继续增加并发测试"></a>11.5 继续增加并发测试</h5><h6 id="11-5-1-连接有限制"><a href="#11-5-1-连接有限制" class="headerlink" title="11.5.1 连接有限制"></a>11.5.1 连接有限制</h6><p>ab -n 2000 -c 200 -k -p postfile -T ‘application/x-www-form-urlencoded’ <a target="_blank" rel="noopener" href="http://192.168.140.1:8080/seckill/doseckill">http://192.168.140.1:8080/seckill/doseckill</a></p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsCPJ9L3.png" alt="img"> </p>
-<p>增加-r参数，-r  Don’t exit on socket receive errors.</p>
-<p>ab -n 2000 -c 100 -r -p postfile -T ‘application/x-www-form-urlencoded’ <a target="_blank" rel="noopener" href="http://192.168.140.1:8080/seckill/doseckill">http://192.168.140.1:8080/seckill/doseckill</a></p>
-<h6 id="11-5-2-已经秒光，可是还有库存"><a href="#11-5-2-已经秒光，可是还有库存" class="headerlink" title="11.5.2 已经秒光，可是还有库存"></a>11.5.2 已经秒光，可是还有库存</h6><p>ab -n 2000 -c 100 -p postfile -T ‘application/x-www-form-urlencoded’ <a target="_blank" rel="noopener" href="http://192.168.137.1:8080/seckill/doseckill">http://192.168.137.1:8080/seckill/doseckill</a></p>
-<p>已经秒光，可是还有库存。原因，就是乐观锁导致很多请求都失败。先点的没秒到，后点的可能秒到了。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsE9sw56.png" alt="img"> </p>
-<h6 id="11-5-3-连接超时，通过连接池解决"><a href="#11-5-3-连接超时，通过连接池解决" class="headerlink" title="11.5.3 连接超时，通过连接池解决"></a>11.5.3 连接超时，通过连接池解决</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsvwqg8S.png" alt="img"> </p>
-<h6 id="11-5-4-连接池"><a href="#11-5-4-连接池" class="headerlink" title="11.5.4 连接池"></a>11.5.4 连接池</h6><p>节省每次连接redis服务带来的消耗，把连接好的实例反复利用。</p>
-<p>通过参数管理连接的行为</p>
-<p>代码见项目中</p>
-<ul>
-<li><p>链接池参数</p>
-<ol>
-<li><p>MaxTotal：控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；如果赋值为-1，则表示不限制；如果pool已经分配了MaxTotal个jedis实例，则此时pool的状态为exhausted。</p>
-</li>
-<li><p>maxIdle：控制一个pool最多有多少个状态为idle(空闲)的jedis实例；</p>
-</li>
-<li><p>MaxWaitMillis：表示当borrow一个jedis实例时，最大的等待毫秒数，如果超过等待时间，则直接抛JedisConnectionException；</p>
-</li>
-<li><p>testOnBorrow：获得一个jedis实例的时候是否检查连接可用性（ping()）；如果为true，则得到的jedis实例均是可用的；</p>
-</li>
-</ol>
-</li>
-</ul>
-<h5 id="11-6-解决库存遗留问题"><a href="#11-6-解决库存遗留问题" class="headerlink" title="11.6 解决库存遗留问题"></a>11.6 解决库存遗留问题</h5><h6 id="11-6-1-LUA脚本"><a href="#11-6-1-LUA脚本" class="headerlink" title="11.6.1 LUA脚本"></a>11.6.1 LUA脚本</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsI1k8hg.png" alt="img"> </p>
-<p>Lua 是一个小巧的<a target="_blank" rel="noopener" href="http://baike.baidu.com/item/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80">脚本语言</a>，Lua脚本可以很容易的被C/C++ 代码调用，也可以反过来调用C/C++的函数，Lua并没有提供强大的库，一个完整的Lua解释器不过200k，所以Lua不适合作为开发独立应用程序的语言，而是作为嵌入式脚本语言。</p>
-<p>很多应用程序、游戏使用LUA作为自己的嵌入式脚本语言，以此来实现可配置性、可扩展性。</p>
-<p>这其中包括魔兽争霸地图、魔兽世界、博德之门、愤怒的小鸟等众多游戏插件或外挂。</p>
-<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/lua/">https://www.w3cschool.cn/lua/</a></p>
-<h6 id="11-6-2-LUA脚本在Redis中的优势"><a href="#11-6-2-LUA脚本在Redis中的优势" class="headerlink" title="11.6.2 LUA脚本在Redis中的优势"></a>11.6.2 LUA脚本在Redis中的优势</h6><p>将复杂的或者多步的redis操作，写为一个脚本，一次提交给redis执行，减少反复连接redis的次数。提升性能。</p>
-<p>LUA脚本是类似redis事务，有一定的原子性，不会被其他命令插队，可以完成一些redis事务性的操作。</p>
-<p>但是注意redis的lua脚本功能，只有在Redis 2.6以上的版本才可以使用。</p>
-<p>利用lua脚本淘汰用户，解决超卖问题。</p>
-<p>redis 2.6版本以后，通过lua脚本解决争抢问题，实际上是redis 利用其单线程的特性，用任务队列的方式解决多任务并发问题。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsUcaXHN.png" alt="img"> </p>
-<h5 id="11-7-Redis-事务-秒杀案例-代码"><a href="#11-7-Redis-事务-秒杀案例-代码" class="headerlink" title="11.7 Redis_事务_秒杀案例_代码"></a>11.7 Redis_事务_秒杀案例_代码</h5><h6 id="11-7-1-项目结构"><a href="#11-7-1-项目结构" class="headerlink" title="11.7.1 项目结构"></a>11.7.1 项目结构</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpskjxSZ8.jpg" alt="img"> </p>
-<h6 id="11-7-2-第一版：简单版"><a href="#11-7-2-第一版：简单版" class="headerlink" title="11.7.2 第一版：简单版"></a>11.7.2 第一版：简单版</h6><p>老师点10次，正常秒杀</p>
-<p>同学一起点试一试，秒杀也是正常的。这是因为还达不到并发的效果。</p>
-<p>使用工具ab模拟并发测试，会出现超卖情况。查看库存会出现负数。</p>
-<h6 id="11-7-3-第二版：加事务-乐观锁-解决超卖-但出现遗留库存和连接超时"><a href="#11-7-3-第二版：加事务-乐观锁-解决超卖-但出现遗留库存和连接超时" class="headerlink" title="11.7.3 第二版：加事务-乐观锁(解决超卖),但出现遗留库存和连接超时"></a>11.7.3 第二版：加事务-乐观锁(解决超卖),但出现遗留库存和连接超时</h6><h6 id="11-7-4-第三版：连接池解决超时问题"><a href="#11-7-4-第三版：连接池解决超时问题" class="headerlink" title="11.7.4 第三版：连接池解决超时问题"></a>11.7.4 第三版：连接池解决超时问题</h6><h6 id="11-7-5-第四版：解决库存依赖问题，LUA脚本"><a href="#11-7-5-第四版：解决库存依赖问题，LUA脚本" class="headerlink" title="11.7.5 第四版：解决库存依赖问题，LUA脚本"></a>11.7.5 第四版：解决库存依赖问题，LUA脚本</h6><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> userid=KEYS[<span class="number">1</span>]; </span><br><span class="line"><span class="keyword">local</span> prodid=KEYS[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">local</span> qtkey=<span class="string">&quot;sk:&quot;</span>..prodid..<span class="string">&quot;:qt&quot;</span>;</span><br><span class="line"><span class="keyword">local</span> usersKey=<span class="string">&quot;sk:&quot;</span>..prodid.<span class="string">&quot;:usr&#x27;; </span></span><br><span class="line"><span class="string">local userExists=redis.call(&quot;</span>sismember<span class="string">&quot;,usersKey,userid);</span></span><br><span class="line"><span class="string">if tonumber(userExists)==1 then </span></span><br><span class="line"><span class="string">  return 2;</span></span><br><span class="line"><span class="string">end</span></span><br><span class="line"><span class="string">local num= redis.call(&quot;</span>get<span class="string">&quot; ,qtkey);</span></span><br><span class="line"><span class="string">if tonumber(num)&lt;=0 then </span></span><br><span class="line"><span class="string">  return 0; </span></span><br><span class="line"><span class="string">else </span></span><br><span class="line"><span class="string">  redis.call(&quot;</span>decr<span class="string">&quot;,qtkey);</span></span><br><span class="line"><span class="string">  redis.call(&quot;</span>sadd<span class="string">&quot;,usersKey,userid);</span></span><br><span class="line"><span class="string">end</span></span><br><span class="line"><span class="string">return 1;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/11.Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BRDB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1371,6 +1217,113 @@
 <p>3、Proxy集群代理模式：Proxy 功能，让 Cluster 拥有像单实例一样的接入方式，降低大家使用cluster的门槛。不过需要注意的是代理不改变 Cluster 的功能限制，不支持的命令还是不会支持，比如跨 slot 的多Key操作。</p>
 <p>4、Modules API</p>
 <p>Redis 6中模块API开发进展非常大，因为Redis Labs为了开发复杂的功能，从一开始就用上Redis模块。Redis可以变成一个框架，利用Modules来构建不同系统，而不需要从头开始写然后还要BSD许可。Redis一开始就是一个向编写各种系统开放的平台。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/7.Redis_Jedis%E6%B5%8B%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="核动力niuniu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="核动力niuniu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/7.Redis_Jedis%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">7.Redis_Jedis测试</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-04 22:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T22:20:24+08:00">2022-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 20:30:00" itemprop="dateModified" datetime="2022-01-05T20:30:00+08:00">2022-01-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="Redis-Jedis测试"><a href="#Redis-Jedis测试" class="headerlink" title="Redis_Jedis测试"></a>Redis_Jedis测试</h4><h5 id="Jedis所需要的jar包"><a href="#Jedis所需要的jar包" class="headerlink" title="Jedis所需要的jar包"></a>Jedis所需要的jar包</h5><blockquote>
+<dependency> 
+
+<p>​    <groupId>redis.clients</groupId> </p>
+<p>​    <artifactId>jedis</artifactId> </p>
+<p>​    <version>3.2.0</version> </p>
+</dependency>
+</blockquote>
+<h5 id="连接Redis注意事项"><a href="#连接Redis注意事项" class="headerlink" title="连接Redis注意事项"></a>连接Redis注意事项</h5><p>禁用Linux的防火墙：Linux(CentOS7)里执行命令</p>
+<p>systemctl stop/disable firewalld.service  </p>
+<p>redis.conf中注释掉bind 127.0.0.1 ,然后 protected-mode no</p>
+<h5 id="Jedis常用操作"><a href="#Jedis常用操作" class="headerlink" title="Jedis常用操作"></a>Jedis常用操作</h5><h6 id="创建动态的工程"><a href="#创建动态的工程" class="headerlink" title="创建动态的工程"></a>创建动态的工程</h6><h6 id="创建测试程序"><a href="#创建测试程序" class="headerlink" title="创建测试程序"></a>创建测试程序</h6><blockquote>
+<p>package com.atguigu.jedis;</p>
+<p>import redis.clients.jedis.Jedis;</p>
+<p>public class Demo01 {public static void main(String[] args) {</p>
+<p>​    Jedis jedis = new Jedis(“192.168.137.3”,6379);</p>
+<p>​    String pong = jedis.ping();</p>
+<p>​    System.out.println(“连接成功：”+pong);</p>
+<p>​    jedis.close();</p>
+<p>​    }</p>
+<p>}</p>
+</blockquote>
+<h5 id="测试相关数据类型"><a href="#测试相关数据类型" class="headerlink" title="测试相关数据类型"></a>测试相关数据类型</h5><h6 id="Jedis-API-Key"><a href="#Jedis-API-Key" class="headerlink" title="Jedis-API:   Key"></a>Jedis-API:   Key</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">jedis.set(<span class="string">&quot;k1&quot;</span>, <span class="string">&quot;v1&quot;</span>);</span><br><span class="line">jedis.set(<span class="string">&quot;k2&quot;</span>, <span class="string">&quot;v2&quot;</span>);</span><br><span class="line">jedis.set(<span class="string">&quot;k3&quot;</span>, <span class="string">&quot;v3&quot;</span>);</span><br><span class="line">Set&lt;String&gt; keys = jedis.keys(<span class="string">&quot;*&quot;</span>);</span><br><span class="line">System.out.println(keys.size());</span><br><span class="line"><span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">	System.out.println(key);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(jedis.exists(<span class="string">&quot;k1&quot;</span>));</span><br><span class="line">System.out.println(jedis.ttl(<span class="string">&quot;k1&quot;</span>));         </span><br><span class="line">System.out.println(jedis.get(<span class="string">&quot;k1&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h6 id="Jedis-API-String"><a href="#Jedis-API-String" class="headerlink" title="Jedis-API:   String"></a>Jedis-API:   String</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jedis.mset(<span class="string">&quot;str1&quot;</span>,<span class="string">&quot;v1&quot;</span>,<span class="string">&quot;str2&quot;</span>,<span class="string">&quot;v2&quot;</span>,<span class="string">&quot;str3&quot;</span>,<span class="string">&quot;v3&quot;</span>);</span><br><span class="line">System.out.println(jedis.mget(<span class="string">&quot;str1&quot;</span>,<span class="string">&quot;str2&quot;</span>,<span class="string">&quot;str3&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h6 id="Jedis-API-List"><a href="#Jedis-API-List" class="headerlink" title="Jedis-API:   List"></a>Jedis-API:   List</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = jedis.lrange(<span class="string">&quot;mylist&quot;</span>,<span class="number">0</span>,-<span class="number">1</span>);</span><br><span class="line"><span class="keyword">for</span> (String element : list) &#123;</span><br><span class="line">System.out.println(element);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Jedis-API-set"><a href="#Jedis-API-set" class="headerlink" title="Jedis-API:   set"></a>Jedis-API:   set</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">jedis.sadd(<span class="string">&quot;orders&quot;</span>, <span class="string">&quot;order01&quot;</span>);</span><br><span class="line">jedis.sadd(<span class="string">&quot;orders&quot;</span>, <span class="string">&quot;order02&quot;</span>);</span><br><span class="line">jedis.sadd(<span class="string">&quot;orders&quot;</span>, <span class="string">&quot;order03&quot;</span>);</span><br><span class="line">jedis.sadd(<span class="string">&quot;orders&quot;</span>, <span class="string">&quot;order04&quot;</span>);</span><br><span class="line">Set&lt;String&gt; smembers = jedis.smembers(<span class="string">&quot;orders&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (String order : smembers) &#123;</span><br><span class="line">System.out.println(order);</span><br><span class="line">&#125;</span><br><span class="line">jedis.srem(<span class="string">&quot;orders&quot;</span>, <span class="string">&quot;order02&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h6 id="Jedis-API-hash"><a href="#Jedis-API-hash" class="headerlink" title="Jedis-API:   hash"></a>Jedis-API:   hash</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">jedis.hset(<span class="string">&quot;hash1&quot;</span>,<span class="string">&quot;userName&quot;</span>,<span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">System.out.println(jedis.hget(<span class="string">&quot;hash1&quot;</span>,<span class="string">&quot;userName&quot;</span>));</span><br><span class="line">Map&lt;String,String&gt; map = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br><span class="line">map.put(<span class="string">&quot;telphone&quot;</span>,<span class="string">&quot;13810169999&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;address&quot;</span>,<span class="string">&quot;atguigu&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;email&quot;</span>,<span class="string">&quot;abc@163.com&quot;</span>);</span><br><span class="line">jedis.hmset(<span class="string">&quot;hash2&quot;</span>,map);</span><br><span class="line">List&lt;String&gt; result = jedis.hmget(<span class="string">&quot;hash2&quot;</span>, <span class="string">&quot;telphone&quot;</span>,<span class="string">&quot;email&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (String element : result) &#123;</span><br><span class="line">System.out.println(element);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Jedis-API-zset"><a href="#Jedis-API-zset" class="headerlink" title="Jedis-API:   zset"></a>Jedis-API:   zset</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">jedis.zadd(<span class="string">&quot;zset01&quot;</span>, <span class="number">100d</span>, <span class="string">&quot;z3&quot;</span>);</span><br><span class="line">jedis.zadd(<span class="string">&quot;zset01&quot;</span>, <span class="number">90d</span>, <span class="string">&quot;l4&quot;</span>);</span><br><span class="line">jedis.zadd(<span class="string">&quot;zset01&quot;</span>, <span class="number">80d</span>, <span class="string">&quot;w5&quot;</span>);</span><br><span class="line">jedis.zadd(<span class="string">&quot;zset01&quot;</span>, <span class="number">70d</span>, <span class="string">&quot;z6&quot;</span>);</span><br><span class="line"> </span><br><span class="line">Set&lt;String&gt; zrange = jedis.zrange(<span class="string">&quot;zset01&quot;</span>, <span class="number">0</span>, -<span class="number">1</span>);</span><br><span class="line"><span class="keyword">for</span> (String e : zrange) &#123;</span><br><span class="line">System.out.println(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
