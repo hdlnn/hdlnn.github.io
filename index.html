@@ -341,7 +341,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 20:17:44" itemprop="dateModified" datetime="2022-01-05T20:17:44+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:19:57" itemprop="dateModified" datetime="2022-01-05T20:19:57+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1578,6 +1578,141 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/4.Redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="核动力niuniu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="核动力niuniu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/4.Redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">4.Redis配置文件介绍</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-04 19:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T19:20:24+08:00">2022-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 20:56:07" itemprop="dateModified" datetime="2022-01-05T20:56:07+08:00">2022-01-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="Redis配置文件介绍"><a href="#Redis配置文件介绍" class="headerlink" title="Redis配置文件介绍"></a>Redis配置文件介绍</h4><p>自定义目录：/myredis/redis.conf</p>
+<h5 id="Units单位"><a href="#Units单位" class="headerlink" title="Units单位"></a>Units单位</h5><p>配置大小单位,开头定义了一些基本的度量单位，只支持bytes，不支持bit</p>
+<p>大小写不敏感</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpskauzTC.png" alt="img"> </p>
+<h5 id="INCLUDES包含"><a href="#INCLUDES包含" class="headerlink" title="INCLUDES包含"></a>INCLUDES包含</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1A11xr.png" alt="img"> </p>
+<p>类似jsp中的include，多实例的情况可以把公用的配置文件提取出来</p>
+<h5 id="网络相关配置"><a href="#网络相关配置" class="headerlink" title="网络相关配置"></a>网络相关配置</h5><h6 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h6><p>默认情况bind=127.0.0.1只能接受本机的访问请求</p>
+<p>不写的情况下，无限制接受任何ip地址的访问</p>
+<p>生产环境肯定要写你应用服务器的地址；服务器是需要远程访问的，所以需要将其注释掉</p>
+<p>如果开启了protected-mode，那么在没有设定bind ip且没有设密码的情况下，Redis只允许接受本机的响应</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsL4G8Lx.png" alt="img"> </p>
+<p>保存配置，停止服务，重启启动查看进程，不再是本机访问了。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsSjGu58.png" alt="img"> </p>
+<h6 id="protected-mode"><a href="#protected-mode" class="headerlink" title="protected-mode"></a>protected-mode</h6><p>将本机访问保护模式设置no</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsVgzx6B.png" alt="img"> </p>
+<h6 id="Port"><a href="#Port" class="headerlink" title="Port"></a>Port</h6><p>端口号，默认 6379</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsyAAKA9.png" alt="img"> </p>
+<h6 id="tcp-backlog"><a href="#tcp-backlog" class="headerlink" title="tcp-backlog"></a>tcp-backlog</h6><p>设置tcp的backlog，backlog其实是一个连接队列，backlog队列总和=未完成三次握手队列 + 已经完成三次握手队列。</p>
+<p>在高并发环境下你需要一个高backlog值来避免慢客户端连接问题。</p>
+<p>注意Linux内核会将这个值减小到/proc/sys/net/core/somaxconn的值（128），所以需要确认增大/proc/sys/net/core/somaxconn和/proc/sys/net/ipv4/tcp_max_syn_backlog（128）两个值来达到想要的效果</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps4N45mL.png" alt="img"> </p>
+<h6 id="timeout"><a href="#timeout" class="headerlink" title="timeout"></a>timeout</h6><p>一个空闲的客户端维持多少秒会关闭，0表示关闭该功能。即永不关闭。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps0HFl14.png" alt="img"> </p>
+<h6 id="tcp-keepalive"><a href="#tcp-keepalive" class="headerlink" title="tcp-keepalive"></a>tcp-keepalive</h6><p>对访问客户端的一种心跳检测，每个n秒检测一次。</p>
+<p>单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsomc1nX.png" alt="img"> </p>
+<h5 id="GENERAL通用"><a href="#GENERAL通用" class="headerlink" title="GENERAL通用"></a>GENERAL通用</h5><h6 id="daemonize"><a href="#daemonize" class="headerlink" title="daemonize"></a>daemonize</h6><p>是否为后台进程，设置为yes</p>
+<p>守护进程，后台启动</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszywqZp.png" alt="img"> </p>
+<h6 id="pidfile"><a href="#pidfile" class="headerlink" title="pidfile"></a>pidfile</h6><p>存放pid文件的位置，每个实例会产生一个不同的pid文件</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszbcKRZ.png" alt="img"> </p>
+<h6 id="loglevel"><a href="#loglevel" class="headerlink" title="loglevel"></a>loglevel</h6><p>指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为notice</p>
+<p>四个级别根据使用阶段来选择，生产环境选择notice 或者warning</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsvf4219.png" alt="img"> </p>
+<h6 id="logfile"><a href="#logfile" class="headerlink" title="logfile"></a>logfile</h6><p>日志文件名称</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpstpgjdo.png" alt="img"> </p>
+<h6 id="databases-16"><a href="#databases-16" class="headerlink" title="databases 16"></a>databases 16</h6><p>设定库的数量 默认16，默认数据库为0，可以使用SELECT <dbid>命令在连接上指定数据库id</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpse24tkp.png" alt="img"> </p>
+<h5 id="SECURITY安全"><a href="#SECURITY安全" class="headerlink" title="SECURITY安全"></a>SECURITY安全</h5><h6 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfHOK4h.png" alt="img"> </p>
+<p>访问密码的查看、设置和取消</p>
+<p>在命令中设置密码，只是临时的。重启redis服务器，密码就还原了。</p>
+<p>永久设置，需要再配置文件中进行设置。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1feu1f.png" alt="img"> </p>
+<h5 id="LIMITS限制"><a href="#LIMITS限制" class="headerlink" title="LIMITS限制"></a>LIMITS限制</h5><h6 id="maxclients"><a href="#maxclients" class="headerlink" title="maxclients"></a>maxclients</h6><p>Ø 设置redis同时可以与多少个客户端进行连接。</p>
+<p>Ø 默认情况下为10000个客户端。</p>
+<p>Ø 如果达到了此限制，redis则会拒绝新的连接请求，并且向这些连接请求方发出“max number of clients reached”以作回应。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsEl2jUr.png" alt="img"> </p>
+<h6 id="maxmemory"><a href="#maxmemory" class="headerlink" title="maxmemory"></a>maxmemory</h6><p>Ø 建议必须设置，否则，将内存占满，造成服务器宕机</p>
+<p>Ø 设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过maxmemory-policy来指定。</p>
+<p>Ø 如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET、LPUSH等。</p>
+<p>Ø 但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，才不用考虑这个因素。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps0taWyw.png" alt="img"> </p>
+<h6 id="maxmemory-policy"><a href="#maxmemory-policy" class="headerlink" title="maxmemory-policy"></a>maxmemory-policy</h6><p>Ø volatile-lru：使用LRU算法移除key，只对设置了过期时间的键；（最近最少使用）</p>
+<p>Ø allkeys-lru：在所有集合key中，使用LRU算法移除key</p>
+<p>Ø volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键</p>
+<p>Ø allkeys-random：在所有集合key中，移除随机的key</p>
+<p>Ø volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key</p>
+<p>Ø noeviction：不进行移除。针对写操作，只是返回错误信息</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsDEojw6.png" alt="img"> </p>
+<h6 id="maxmemory-samples"><a href="#maxmemory-samples" class="headerlink" title="maxmemory-samples"></a>maxmemory-samples</h6><p>Ø 设置样本数量，LRU算法和最小TTL算法都并非是精确的算法，而是估算值，所以你可以设置样本的大小，redis默认会检查这么多个key并选择其中LRU的那个。</p>
+<p>Ø 一般设置3到7的数字，数值越小样本越不准确，但性能消耗越小。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsi14yIt.png" alt="img"> </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/k8s%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/4.%E5%AE%9E%E6%88%98%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1767,7 +1902,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/4.Redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/5.Redis%E7%9A%84%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1781,7 +1916,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/4.Redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">4.Redis配置文件介绍</a>
+            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/5.Redis%E7%9A%84%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" class="post-title-link" itemprop="url">5.Redis的发布和订阅</a>
         </h2>
 
         <div class="post-meta">
@@ -1791,14 +1926,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-01-04 19:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T19:20:24+08:00">2022-01-04</time>
+              <time title="创建时间：2022-01-04 18:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T18:20:24+08:00">2022-01-04</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 20:56:07" itemprop="dateModified" datetime="2022-01-05T20:56:07+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:56:13" itemprop="dateModified" datetime="2022-01-05T20:56:13+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1821,68 +1956,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="Redis配置文件介绍"><a href="#Redis配置文件介绍" class="headerlink" title="Redis配置文件介绍"></a>Redis配置文件介绍</h4><p>自定义目录：/myredis/redis.conf</p>
-<h5 id="Units单位"><a href="#Units单位" class="headerlink" title="Units单位"></a>Units单位</h5><p>配置大小单位,开头定义了一些基本的度量单位，只支持bytes，不支持bit</p>
-<p>大小写不敏感</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpskauzTC.png" alt="img"> </p>
-<h5 id="INCLUDES包含"><a href="#INCLUDES包含" class="headerlink" title="INCLUDES包含"></a>INCLUDES包含</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1A11xr.png" alt="img"> </p>
-<p>类似jsp中的include，多实例的情况可以把公用的配置文件提取出来</p>
-<h5 id="网络相关配置"><a href="#网络相关配置" class="headerlink" title="网络相关配置"></a>网络相关配置</h5><h6 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h6><p>默认情况bind=127.0.0.1只能接受本机的访问请求</p>
-<p>不写的情况下，无限制接受任何ip地址的访问</p>
-<p>生产环境肯定要写你应用服务器的地址；服务器是需要远程访问的，所以需要将其注释掉</p>
-<p>如果开启了protected-mode，那么在没有设定bind ip且没有设密码的情况下，Redis只允许接受本机的响应</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsL4G8Lx.png" alt="img"> </p>
-<p>保存配置，停止服务，重启启动查看进程，不再是本机访问了。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsSjGu58.png" alt="img"> </p>
-<h6 id="protected-mode"><a href="#protected-mode" class="headerlink" title="protected-mode"></a>protected-mode</h6><p>将本机访问保护模式设置no</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsVgzx6B.png" alt="img"> </p>
-<h6 id="Port"><a href="#Port" class="headerlink" title="Port"></a>Port</h6><p>端口号，默认 6379</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsyAAKA9.png" alt="img"> </p>
-<h6 id="tcp-backlog"><a href="#tcp-backlog" class="headerlink" title="tcp-backlog"></a>tcp-backlog</h6><p>设置tcp的backlog，backlog其实是一个连接队列，backlog队列总和=未完成三次握手队列 + 已经完成三次握手队列。</p>
-<p>在高并发环境下你需要一个高backlog值来避免慢客户端连接问题。</p>
-<p>注意Linux内核会将这个值减小到/proc/sys/net/core/somaxconn的值（128），所以需要确认增大/proc/sys/net/core/somaxconn和/proc/sys/net/ipv4/tcp_max_syn_backlog（128）两个值来达到想要的效果</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps4N45mL.png" alt="img"> </p>
-<h6 id="timeout"><a href="#timeout" class="headerlink" title="timeout"></a>timeout</h6><p>一个空闲的客户端维持多少秒会关闭，0表示关闭该功能。即永不关闭。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps0HFl14.png" alt="img"> </p>
-<h6 id="tcp-keepalive"><a href="#tcp-keepalive" class="headerlink" title="tcp-keepalive"></a>tcp-keepalive</h6><p>对访问客户端的一种心跳检测，每个n秒检测一次。</p>
-<p>单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 </p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsomc1nX.png" alt="img"> </p>
-<h5 id="GENERAL通用"><a href="#GENERAL通用" class="headerlink" title="GENERAL通用"></a>GENERAL通用</h5><h6 id="daemonize"><a href="#daemonize" class="headerlink" title="daemonize"></a>daemonize</h6><p>是否为后台进程，设置为yes</p>
-<p>守护进程，后台启动</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszywqZp.png" alt="img"> </p>
-<h6 id="pidfile"><a href="#pidfile" class="headerlink" title="pidfile"></a>pidfile</h6><p>存放pid文件的位置，每个实例会产生一个不同的pid文件</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszbcKRZ.png" alt="img"> </p>
-<h6 id="loglevel"><a href="#loglevel" class="headerlink" title="loglevel"></a>loglevel</h6><p>指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为notice</p>
-<p>四个级别根据使用阶段来选择，生产环境选择notice 或者warning</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsvf4219.png" alt="img"> </p>
-<h6 id="logfile"><a href="#logfile" class="headerlink" title="logfile"></a>logfile</h6><p>日志文件名称</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpstpgjdo.png" alt="img"> </p>
-<h6 id="databases-16"><a href="#databases-16" class="headerlink" title="databases 16"></a>databases 16</h6><p>设定库的数量 默认16，默认数据库为0，可以使用SELECT <dbid>命令在连接上指定数据库id</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpse24tkp.png" alt="img"> </p>
-<h5 id="SECURITY安全"><a href="#SECURITY安全" class="headerlink" title="SECURITY安全"></a>SECURITY安全</h5><h6 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfHOK4h.png" alt="img"> </p>
-<p>访问密码的查看、设置和取消</p>
-<p>在命令中设置密码，只是临时的。重启redis服务器，密码就还原了。</p>
-<p>永久设置，需要再配置文件中进行设置。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1feu1f.png" alt="img"> </p>
-<h5 id="LIMITS限制"><a href="#LIMITS限制" class="headerlink" title="LIMITS限制"></a>LIMITS限制</h5><h6 id="maxclients"><a href="#maxclients" class="headerlink" title="maxclients"></a>maxclients</h6><p>Ø 设置redis同时可以与多少个客户端进行连接。</p>
-<p>Ø 默认情况下为10000个客户端。</p>
-<p>Ø 如果达到了此限制，redis则会拒绝新的连接请求，并且向这些连接请求方发出“max number of clients reached”以作回应。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsEl2jUr.png" alt="img"> </p>
-<h6 id="maxmemory"><a href="#maxmemory" class="headerlink" title="maxmemory"></a>maxmemory</h6><p>Ø 建议必须设置，否则，将内存占满，造成服务器宕机</p>
-<p>Ø 设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过maxmemory-policy来指定。</p>
-<p>Ø 如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET、LPUSH等。</p>
-<p>Ø 但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，才不用考虑这个因素。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps0taWyw.png" alt="img"> </p>
-<h6 id="maxmemory-policy"><a href="#maxmemory-policy" class="headerlink" title="maxmemory-policy"></a>maxmemory-policy</h6><p>Ø volatile-lru：使用LRU算法移除key，只对设置了过期时间的键；（最近最少使用）</p>
-<p>Ø allkeys-lru：在所有集合key中，使用LRU算法移除key</p>
-<p>Ø volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键</p>
-<p>Ø allkeys-random：在所有集合key中，移除随机的key</p>
-<p>Ø volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key</p>
-<p>Ø noeviction：不进行移除。针对写操作，只是返回错误信息</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsDEojw6.png" alt="img"> </p>
-<h6 id="maxmemory-samples"><a href="#maxmemory-samples" class="headerlink" title="maxmemory-samples"></a>maxmemory-samples</h6><p>Ø 设置样本数量，LRU算法和最小TTL算法都并非是精确的算法，而是估算值，所以你可以设置样本的大小，redis默认会检查这么多个key并选择其中LRU的那个。</p>
-<p>Ø 一般设置3到7的数字，数值越小样本越不准确，但性能消耗越小。</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsi14yIt.png" alt="img"> </p>
+          <h4 id="Redis的发布和订阅"><a href="#Redis的发布和订阅" class="headerlink" title="Redis的发布和订阅"></a>Redis的发布和订阅</h4><h5 id="什么是发布和订阅"><a href="#什么是发布和订阅" class="headerlink" title="什么是发布和订阅"></a>什么是发布和订阅</h5><p>Redis 发布订阅 (pub/sub) 是一种消息通信模式：发送者 (pub) 发送消息，订阅者 (sub) 接收消息。</p>
+<p>Redis 客户端可以订阅任意数量的频道。</p>
+<h5 id="Redis的发布和订阅-1"><a href="#Redis的发布和订阅-1" class="headerlink" title="Redis的发布和订阅"></a>Redis的发布和订阅</h5><p>1、客户端可以订阅频道如下图</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpseH2qkE.jpg" alt="img"> </p>
+<p>2、当给这个频道发布消息后，消息就会发送给订阅的客户端</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsTzPZ3f.jpg" alt="img"> </p>
+<h5 id="发布订阅命令行实现"><a href="#发布订阅命令行实现" class="headerlink" title="发布订阅命令行实现"></a>发布订阅命令行实现</h5><p>1、 打开一个客户端订阅channel1</p>
+<p>SUBSCRIBE channel1</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsasL1s1.jpg" alt="img"> </p>
+<p>2、打开另一个客户端，给channel1发布消息hello</p>
+<p>publish channel1 hello</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpslLhjCY.jpg" alt="img"> </p>
+<p>返回的1是订阅者数量</p>
+<p>3、打开第一个客户端可以看到发送的消息</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsqTEudf.jpg" alt="img"> </p>
+<p>注：发布的消息没有持久化，如果在订阅的客户端收不到hello，只能收到订阅后发布的消息</p>
 
       
     </div>
@@ -2351,95 +2440,6 @@
 <p>下面看一下容忍的详细配置:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 ~]# kubectl explain pod.spec.tolerations</span><br><span class="line">......</span><br><span class="line">FIELDS:</span><br><span class="line">   key       # 对应着要容忍的污点的键，空意味着匹配所有的键</span><br><span class="line">   value     # 对应着要容忍的污点的值</span><br><span class="line">   operator  # key-value的运算符，支持Equal和Exists（默认）</span><br><span class="line">   effect    # 对应污点的effect，空意味着匹配所有影响</span><br><span class="line">   tolerationSeconds   # 容忍时间, 当effect为NoExecute时生效，表示pod在Node上的停留时间</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/5.Redis%E7%9A%84%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="核动力niuniu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="核动力niuniu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/5.Redis%E7%9A%84%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" class="post-title-link" itemprop="url">5.Redis的发布和订阅</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-04 18:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T18:20:24+08:00">2022-01-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 20:56:13" itemprop="dateModified" datetime="2022-01-05T20:56:13+08:00">2022-01-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="Redis的发布和订阅"><a href="#Redis的发布和订阅" class="headerlink" title="Redis的发布和订阅"></a>Redis的发布和订阅</h4><h5 id="什么是发布和订阅"><a href="#什么是发布和订阅" class="headerlink" title="什么是发布和订阅"></a>什么是发布和订阅</h5><p>Redis 发布订阅 (pub/sub) 是一种消息通信模式：发送者 (pub) 发送消息，订阅者 (sub) 接收消息。</p>
-<p>Redis 客户端可以订阅任意数量的频道。</p>
-<h5 id="Redis的发布和订阅-1"><a href="#Redis的发布和订阅-1" class="headerlink" title="Redis的发布和订阅"></a>Redis的发布和订阅</h5><p>1、客户端可以订阅频道如下图</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpseH2qkE.jpg" alt="img"> </p>
-<p>2、当给这个频道发布消息后，消息就会发送给订阅的客户端</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsTzPZ3f.jpg" alt="img"> </p>
-<h5 id="发布订阅命令行实现"><a href="#发布订阅命令行实现" class="headerlink" title="发布订阅命令行实现"></a>发布订阅命令行实现</h5><p>1、 打开一个客户端订阅channel1</p>
-<p>SUBSCRIBE channel1</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsasL1s1.jpg" alt="img"> </p>
-<p>2、打开另一个客户端，给channel1发布消息hello</p>
-<p>publish channel1 hello</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpslLhjCY.jpg" alt="img"> </p>
-<p>返回的1是订阅者数量</p>
-<p>3、打开第一个客户端可以看到发送的消息</p>
-<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsqTEudf.jpg" alt="img"> </p>
-<p>注：发布的消息没有持久化，如果在订阅的客户端收不到hello，只能收到订阅后发布的消息</p>
 
       
     </div>
