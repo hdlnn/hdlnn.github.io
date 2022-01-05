@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="十四、Redis主从复制14.1 是什么主机数据更新后根据配置和策略， 自动同步到备机的master&#x2F;slaver机制，Master以写为主，Slave以读为主 14.2 能干嘛 读写分离，性能扩展 容灾快速恢复    14.3 怎么玩：主从复制拷贝多个redis.conf文件include(写绝对路径) 开启daemonize yes Pid文件名字pidfile 指定端口port Log文件名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="13.Redis主从复制">
+<meta property="og:url" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/13.Redis_%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/index.html">
+<meta property="og:site_name" content="核动力niuniu">
+<meta property="og:description" content="十四、Redis主从复制14.1 是什么主机数据更新后根据配置和策略， 自动同步到备机的master&#x2F;slaver机制，Master以写为主，Slave以读为主 14.2 能干嘛 读写分离，性能扩展 容灾快速恢复    14.3 怎么玩：主从复制拷贝多个redis.conf文件include(写绝对路径) 开启daemonize yes Pid文件名字pidfile 指定端口port Log文件名">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpssiKt5I.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps6NT9j1.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpscRiwkq.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsNa2CSj.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsVQEbPi.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsYvvWfS.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsUBbGKU.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpshNC7A7.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsDGvqdA.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpswd4AF5.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps8yITwF.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsmrFpmJ.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps3To71P.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsjFmEkL.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsu0ReF8.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWKkVzp.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsuFaVS7.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWUnKND.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsKO5GHN.png">
+<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWVLIkq.png">
+<meta property="article:published_time" content="2022-01-04T14:20:24.000Z">
+<meta property="article:modified_time" content="2022-01-05T11:54:00.386Z">
+<meta property="article:author" content="核动力niuniu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpssiKt5I.png">
+
+<link rel="canonical" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/13.Redis_%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>13.Redis主从复制 | 核动力niuniu</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">核动力niuniu</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/13.Redis_%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="核动力niuniu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="核动力niuniu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          13.Redis主从复制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-04 22:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T22:20:24+08:00">2022-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 19:54:00" itemprop="dateModified" datetime="2022-01-05T19:54:00+08:00">2022-01-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="十四、Redis主从复制"><a href="#十四、Redis主从复制" class="headerlink" title="十四、Redis主从复制"></a>十四、Redis主从复制</h4><h5 id="14-1-是什么"><a href="#14-1-是什么" class="headerlink" title="14.1 是什么"></a>14.1 是什么</h5><p>主机数据更新后根据配置和策略， 自动同步到备机的master/slaver机制，Master以写为主，Slave以读为主</p>
+<h5 id="14-2-能干嘛"><a href="#14-2-能干嘛" class="headerlink" title="14.2 能干嘛"></a>14.2 能干嘛</h5><ul>
+<li>读写分离，性能扩展</li>
+<li>容灾快速恢复</li>
+</ul>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpssiKt5I.png" alt="img"> </p>
+<h5 id="14-3-怎么玩：主从复制"><a href="#14-3-怎么玩：主从复制" class="headerlink" title="14.3 怎么玩：主从复制"></a>14.3 怎么玩：主从复制</h5><p>拷贝多个redis.conf文件include(写绝对路径)</p>
+<p>开启daemonize yes</p>
+<p>Pid文件名字pidfile</p>
+<p>指定端口port</p>
+<p>Log文件名字</p>
+<p>dump.rdb名字dbfilename</p>
+<p>Appendonly 关掉或者换名字</p>
+<h6 id="14-3-1-新建redis6379-conf，填写以下内容"><a href="#14-3-1-新建redis6379-conf，填写以下内容" class="headerlink" title="14.3.1 新建redis6379.conf，填写以下内容"></a>14.3.1 新建redis6379.conf，填写以下内容</h6><p>include /myredis/redis.conf</p>
+<p>pidfile /var/run/redis_6379.pid</p>
+<p>port 6379</p>
+<p>dbfilename dump6379.rdb</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps6NT9j1.png" alt="img"> </p>
+<h6 id="14-3-2-新建redis6380-conf，填写以下内容"><a href="#14-3-2-新建redis6380-conf，填写以下内容" class="headerlink" title="14.3.2 新建redis6380.conf，填写以下内容"></a>14.3.2 新建redis6380.conf，填写以下内容</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpscRiwkq.png" alt="img"> </p>
+<h6 id="14-3-3-新建redis6381-conf，填写以下内容"><a href="#14-3-3-新建redis6381-conf，填写以下内容" class="headerlink" title="14.3.3 新建redis6381.conf，填写以下内容"></a>14.3.3 新建redis6381.conf，填写以下内容</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsNa2CSj.png" alt="img"> </p>
+<p><strong>slave-priority 10</strong></p>
+<p>设置从机的优先级，值越小，优先级越高，用于选举主机时使用。默认100</p>
+<h6 id="14-3-4-启动三台redis服务器"><a href="#14-3-4-启动三台redis服务器" class="headerlink" title="14.3.4 启动三台redis服务器"></a>14.3.4 启动三台redis服务器</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsVQEbPi.png" alt="img"> </p>
+<h6 id="14-3-5-查看系统进程，看看三台服务器是否启动"><a href="#14-3-5-查看系统进程，看看三台服务器是否启动" class="headerlink" title="14.3.5 查看系统进程，看看三台服务器是否启动"></a>14.3.5 查看系统进程，看看三台服务器是否启动</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsYvvWfS.png" alt="img"> </p>
+<h6 id="14-3-6-查看三台主机运行情况"><a href="#14-3-6-查看三台主机运行情况" class="headerlink" title="14.3.6 查看三台主机运行情况"></a>14.3.6 查看三台主机运行情况</h6><p>info replication</p>
+<p>打印主从复制的相关信息</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsUBbGKU.png" alt="img"> </p>
+<h6 id="14-3-7-配从-库-不配主-库"><a href="#14-3-7-配从-库-不配主-库" class="headerlink" title="14.3.7 配从(库)不配主(库)"></a>14.3.7 配从(库)不配主(库)</h6><p>slaveof  <ip><port></p>
+<p>成为某个实例的从服务器</p>
+<p>1、在6380和6381上执行: slaveof 127.0.0.1 6379</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpshNC7A7.png" alt="img"> </p>
+<p>2、在主机上写，在从机上可以读取数据</p>
+<p>在从机上写数据报错</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsDGvqdA.png" alt="img"> </p>
+<p>3、主机挂掉，重启就行，一切如初</p>
+<p>4、从机重启需重设：slaveof 127.0.0.1 6379</p>
+<p>可以将配置增加到文件中。永久生效。</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpswd4AF5.png" alt="img"> </p>
+<h5 id="14-4-常用3招"><a href="#14-4-常用3招" class="headerlink" title="14.4 常用3招"></a>14.4 常用3招</h5><h6 id="14-4-1-一主二仆"><a href="#14-4-1-一主二仆" class="headerlink" title="14.4.1 一主二仆"></a>14.4.1 一主二仆</h6><p>切入点问题？slave1、slave2是从头开始复制还是从切入点开始复制?比如从k4进来，那之前的k1,k2,k3是否也可以复制？</p>
+<p>从机是否可以写？set可否？ </p>
+<p>主机shutdown后情况如何？从机是上位还是原地待命？</p>
+<p>主机又回来了后，主机新增记录，从机还能否顺利复制？ </p>
+<p>其中一台从机down后情况如何？依照原有它能跟上大部队吗？</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps8yITwF.png" alt="img"> </p>
+<h6 id="14-4-2-薪火相传"><a href="#14-4-2-薪火相传" class="headerlink" title="14.4.2 薪火相传"></a>14.4.2 薪火相传</h6><p>上一个Slave可以是下一个slave的Master，Slave同样可以接收其他 slaves的连接和同步请求，那么该slave作为了链条中下一个的master, 可以有效减轻master的写压力,去中心化降低风险。</p>
+<p>用 slaveof  <ip><port></p>
+<p>中途变更转向:会清除之前的数据，重新建立拷贝最新的</p>
+<p>风险是一旦某个slave宕机，后面的slave都没法备份</p>
+<p>主机挂了，从机还是从机，无法写数据了</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsmrFpmJ.png" alt="img"> </p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps3To71P.png" alt="img"> </p>
+<h6 id="14-4-3-反客为主"><a href="#14-4-3-反客为主" class="headerlink" title="14.4.3 反客为主"></a>14.4.3 反客为主</h6><p>当一个master宕机后，后面的slave可以立刻升为master，其后面的slave不用做任何修改。</p>
+<p>用 slaveof  no one  将从机变为主机。</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsjFmEkL.png" alt="img"> </p>
+<h5 id="14-5-复制原理"><a href="#14-5-复制原理" class="headerlink" title="14.5 复制原理"></a>14.5 复制原理</h5><ul>
+<li>Slave启动成功连接到master后会发送一个sync命令</li>
+<li>Master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令， 在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</li>
+<li>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
+<li>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</li>
+<li>但是只要是重新连接master,一次完全同步（全量复制)将被自动执行</li>
+</ul>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsu0ReF8.png" alt="img"> </p>
+<h5 id="14-6-哨兵模式-sentinel"><a href="#14-6-哨兵模式-sentinel" class="headerlink" title="14.6 哨兵模式(sentinel)"></a>14.6 哨兵模式(sentinel)</h5><h6 id="14-6-1-是什么"><a href="#14-6-1-是什么" class="headerlink" title="14.6.1 是什么"></a>14.6.1 是什么</h6><p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWKkVzp.png" alt="img"> </p>
+<h6 id="14-6-2-怎么玩-使用步骤"><a href="#14-6-2-怎么玩-使用步骤" class="headerlink" title="14.6.2 怎么玩(使用步骤)"></a>14.6.2 怎么玩(使用步骤)</h6><ul>
+<li>调整为一主二仆模式，6379带着6380、6381</li>
+</ul>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsuFaVS7.png" alt="img"> </p>
+<ul>
+<li><p>自定义的/myredis目录下新建sentinel.conf文件，名字绝不能错</p>
+</li>
+<li><p>配置哨兵,填写内容</p>
+<p>sentinel monitor mymaster 127.0.0.1 6379 1</p>
+<p>其中mymaster为监控对象起的服务器名称， 1 为至少有多少个哨兵同意迁移的数量。 </p>
+</li>
+<li><p>启动哨兵</p>
+<p>/usr/local/bin</p>
+<p>redis做压测可以用自带的redis-benchmark工具</p>
+<p>执行redis-sentinel  /myredis/sentinel.conf </p>
+</li>
+</ul>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWUnKND.png" alt="img"> </p>
+<ul>
+<li>当主机挂掉，从机选举中产生新的主机</li>
+</ul>
+<p>(大概10秒左右可以看到哨兵窗口日志，切换了新的主机)</p>
+<p>哪个从机会被选举为主机呢？根据优先级别：slave-priority </p>
+<p>原主机重启后会变为从机。</p>
+<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsKO5GHN.png" alt="img"> </p>
+<ul>
+<li>复制延时</li>
+</ul>
+<p>由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重。</p>
+<h6 id="14-6-3-故障恢复"><a href="#14-6-3-故障恢复" class="headerlink" title="14.6.3 故障恢复"></a>14.6.3 故障恢复</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWVLIkq.png" alt="img"> </p>
+<p>优先级在redis.conf中默认：slave-priority 100，值越小优先级越高</p>
+<p>偏移量是指获得原主机数据最全的</p>
+<p>每个redis实例启动后都会随机生成一个40位的runid</p>
+<h6 id="14-6-4-主从复制"><a href="#14-6-4-主从复制" class="headerlink" title="14.6.4 主从复制"></a>14.6.4 主从复制</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> JedisSentinelPool jedisSentinelPool=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>  Jedis <span class="title">getJedisFromSentinel</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(jedisSentinelPool==<span class="keyword">null</span>)&#123;</span><br><span class="line">            Set&lt;String&gt; sentinelSet=<span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">            sentinelSet.add(<span class="string">&quot;192.168.11.103:26379&quot;</span>);</span><br><span class="line"></span><br><span class="line">            JedisPoolConfig jedisPoolConfig =<span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">            jedisPoolConfig.setMaxTotal(<span class="number">10</span>); <span class="comment">//最大可用连接数</span></span><br><span class="line">jedisPoolConfig.setMaxIdle(<span class="number">5</span>); <span class="comment">//最大闲置连接数</span></span><br><span class="line">jedisPoolConfig.setMinIdle(<span class="number">5</span>); <span class="comment">//最小闲置连接数</span></span><br><span class="line">jedisPoolConfig.setBlockWhenExhausted(<span class="keyword">true</span>); <span class="comment">//连接耗尽是否等待</span></span><br><span class="line">jedisPoolConfig.setMaxWaitMillis(<span class="number">2000</span>); <span class="comment">//等待时间</span></span><br><span class="line">jedisPoolConfig.setTestOnBorrow(<span class="keyword">true</span>); <span class="comment">//取连接的时候进行一下测试 ping pong</span></span><br><span class="line"></span><br><span class="line">jedisSentinelPool=<span class="keyword">new</span> JedisSentinelPool(<span class="string">&quot;mymaster&quot;</span>,sentinelSet,jedisPoolConfig);</span><br><span class="line"><span class="keyword">return</span> jedisSentinelPool.getResource();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">return</span> jedisSentinelPool.getResource();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/14.Redis%E9%9B%86%E7%BE%A4/" rel="prev" title="14.Redis集群">
+      <i class="fa fa-chevron-left"></i> 14.Redis集群
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/12.Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BAOF/" rel="next" title="12.Redis持久化之AOF">
+      12.Redis持久化之AOF <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">十四、Redis主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#14-1-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">14.1 是什么</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-2-%E8%83%BD%E5%B9%B2%E5%98%9B"><span class="nav-number">1.2.</span> <span class="nav-text">14.2 能干嘛</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-3-%E6%80%8E%E4%B9%88%E7%8E%A9%EF%BC%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text">14.3 怎么玩：主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-1-%E6%96%B0%E5%BB%BAredis6379-conf%EF%BC%8C%E5%A1%AB%E5%86%99%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">1.3.1.</span> <span class="nav-text">14.3.1 新建redis6379.conf，填写以下内容</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-2-%E6%96%B0%E5%BB%BAredis6380-conf%EF%BC%8C%E5%A1%AB%E5%86%99%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">1.3.2.</span> <span class="nav-text">14.3.2 新建redis6380.conf，填写以下内容</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-3-%E6%96%B0%E5%BB%BAredis6381-conf%EF%BC%8C%E5%A1%AB%E5%86%99%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">1.3.3.</span> <span class="nav-text">14.3.3 新建redis6381.conf，填写以下内容</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-4-%E5%90%AF%E5%8A%A8%E4%B8%89%E5%8F%B0redis%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">14.3.4 启动三台redis服务器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-5-%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%9C%8B%E7%9C%8B%E4%B8%89%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8"><span class="nav-number">1.3.5.</span> <span class="nav-text">14.3.5 查看系统进程，看看三台服务器是否启动</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-6-%E6%9F%A5%E7%9C%8B%E4%B8%89%E5%8F%B0%E4%B8%BB%E6%9C%BA%E8%BF%90%E8%A1%8C%E6%83%85%E5%86%B5"><span class="nav-number">1.3.6.</span> <span class="nav-text">14.3.6 查看三台主机运行情况</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-3-7-%E9%85%8D%E4%BB%8E-%E5%BA%93-%E4%B8%8D%E9%85%8D%E4%B8%BB-%E5%BA%93"><span class="nav-number">1.3.7.</span> <span class="nav-text">14.3.7 配从(库)不配主(库)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-4-%E5%B8%B8%E7%94%A83%E6%8B%9B"><span class="nav-number">1.4.</span> <span class="nav-text">14.4 常用3招</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#14-4-1-%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%86"><span class="nav-number">1.4.1.</span> <span class="nav-text">14.4.1 一主二仆</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-4-2-%E8%96%AA%E7%81%AB%E7%9B%B8%E4%BC%A0"><span class="nav-number">1.4.2.</span> <span class="nav-text">14.4.2 薪火相传</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-4-3-%E5%8F%8D%E5%AE%A2%E4%B8%BA%E4%B8%BB"><span class="nav-number">1.4.3.</span> <span class="nav-text">14.4.3 反客为主</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-5-%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">14.5 复制原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-6-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F-sentinel"><span class="nav-number">1.6.</span> <span class="nav-text">14.6 哨兵模式(sentinel)</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#14-6-1-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.1.</span> <span class="nav-text">14.6.1 是什么</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-6-2-%E6%80%8E%E4%B9%88%E7%8E%A9-%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.6.2.</span> <span class="nav-text">14.6.2 怎么玩(使用步骤)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-6-3-%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">1.6.3.</span> <span class="nav-text">14.6.3 故障恢复</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#14-6-4-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">1.6.4.</span> <span class="nav-text">14.6.4 主从复制</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">核动力niuniu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">核动力niuniu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
