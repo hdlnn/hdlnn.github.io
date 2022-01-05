@@ -516,7 +516,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 19:39:23" itemprop="dateModified" datetime="2022-01-05T19:39:23+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:22:03" itemprop="dateModified" datetime="2022-01-05T20:22:03+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -539,18 +539,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="二、Redis概述安装"><a href="#二、Redis概述安装" class="headerlink" title="二、Redis概述安装"></a>二、Redis概述安装</h4><p>Ø Redis是一个开源的key-value存储系统。</p>
+          <h4 id="Redis概述安装"><a href="#Redis概述安装" class="headerlink" title="Redis概述安装"></a>Redis概述安装</h4><p>Ø Redis是一个开源的key-value存储系统。</p>
 <p>Ø 和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set –有序集合)和hash（哈希类型）。</p>
 <p>Ø 这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。</p>
 <p>Ø 在此基础上，Redis支持各种不同方式的排序。</p>
 <p>Ø 与memcached一样，为了保证效率，数据都是缓存在内存中。</p>
 <p>Ø 区别的是Redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件。</p>
 <p>Ø 并且在此基础上实现了master-slave(主从)同步。</p>
-<h5 id="2-1-应用场景"><a href="#2-1-应用场景" class="headerlink" title="2.1 应用场景"></a>2.1 应用场景</h5><h6 id="2-1-1-配合关系型数据库做高速缓存"><a href="#2-1-1-配合关系型数据库做高速缓存" class="headerlink" title="2.1.1 配合关系型数据库做高速缓存"></a>2.1.1 配合关系型数据库做高速缓存</h6><p>Ø 高频次，热门访问的数据，降低数据库IO</p>
+<h5 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h5><h6 id="配合关系型数据库做高速缓存"><a href="#配合关系型数据库做高速缓存" class="headerlink" title="配合关系型数据库做高速缓存"></a>配合关系型数据库做高速缓存</h6><p>Ø 高频次，热门访问的数据，降低数据库IO</p>
 <p>Ø 分布式架构，做session共享</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsDF5ASI.png" alt="img"> </p>
-<h6 id="2-1-2-多样的数据结构存储持久化数据"><a href="#2-1-2-多样的数据结构存储持久化数据" class="headerlink" title="2.1.2 多样的数据结构存储持久化数据"></a>2.1.2 多样的数据结构存储持久化数据</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsIRdcFW.png" alt="img"> </p>
-<h5 id="2-2-Redis安装"><a href="#2-2-Redis安装" class="headerlink" title="2.2 Redis安装"></a>2.2 Redis安装</h5><table>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsDF5ASI.png" alt="img"> </p>
+<h6 id="多样的数据结构存储持久化数据"><a href="#多样的数据结构存储持久化数据" class="headerlink" title="多样的数据结构存储持久化数据"></a>多样的数据结构存储持久化数据</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsIRdcFW.png" alt="img"> </p>
+<h5 id="Redis安装"><a href="#Redis安装" class="headerlink" title="Redis安装"></a>Redis安装</h5><table>
 <thead>
 <tr>
 <th>Redis官方网站</th>
@@ -562,13 +562,13 @@
 <td><a target="_blank" rel="noopener" href="http://redis.cn/">http://redis.cn/</a></td>
 </tr>
 </tbody></table>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsmUsI3S.jpg" alt="img"> </p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsCvIJto.jpg" alt="img"> </p>
-<h6 id="2-2-1-安装版本"><a href="#2-2-1-安装版本" class="headerlink" title="2.2.1 安装版本"></a>2.2.1 安装版本</h6><p>Ø 6.2.1 for Linux（redis-6.2.1.tar.gz）</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsmUsI3S.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsCvIJto.jpg" alt="img"> </p>
+<h6 id="安装版本"><a href="#安装版本" class="headerlink" title="安装版本"></a>安装版本</h6><p>Ø 6.2.1 for Linux（redis-6.2.1.tar.gz）</p>
 <p>Ø 不用考虑在windows环境下对Redis的支持</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpswAbLaj.png" alt="img"> </p>
-<h6 id="2-2-2-安装步骤"><a href="#2-2-2-安装步骤" class="headerlink" title="2.2.2 安装步骤"></a>2.2.2 安装步骤</h6><p>准备工作：下载安装最新版的gcc编译器</p>
-<h6 id="2-2-3-安装C-语言的编译环境"><a href="#2-2-3-安装C-语言的编译环境" class="headerlink" title="2.2.3 安装C 语言的编译环境"></a>2.2.3 安装C 语言的编译环境</h6><ul>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpswAbLaj.png" alt="img"> </p>
+<h6 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h6><p>准备工作：下载安装最新版的gcc编译器</p>
+<h6 id="安装C-语言的编译环境"><a href="#安装C-语言的编译环境" class="headerlink" title="安装C 语言的编译环境"></a>安装C 语言的编译环境</h6><ul>
 <li><p>yum install centos-release-scl scl-utils-build</p>
 </li>
 <li><p>yum install -y devtoolset-8-toolchain</p>
@@ -580,7 +580,7 @@
 <ul>
 <li>gcc –version</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsfo4FjS.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfo4FjS.jpg" alt="img"> </p>
 <ul>
 <li><p>下载redis-6.2.1.tar.gz放/opt目录</p>
 </li>
@@ -593,29 +593,29 @@
 <li><p>如果没有准备好C语言编译环境，make 会报错—Jemalloc/jemalloc.h：没有那个文件</p>
 </li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpstuXSqk.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpstuXSqk.png" alt="img"> </p>
 <ul>
 <li>解决方案：运行make distclean</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsrmmhyP.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsrmmhyP.png" alt="img"> </p>
 <ul>
 <li>在redis-6.2.1目录下再次执行make命令（只是编译好）</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps6pB91g.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps6pB91g.png" alt="img"> </p>
 <ul>
 <li>跳过make test 继续执行: make install</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpskxuaN8.png" alt="img"> </p>
-<h6 id="2-2-4-安装目录：-usr-local-bin"><a href="#2-2-4-安装目录：-usr-local-bin" class="headerlink" title="2.2.4 安装目录：/usr/local/bin"></a>2.2.4 安装目录：/usr/local/bin</h6><p>​    查看默认安装目录：</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpskxuaN8.png" alt="img"> </p>
+<h6 id="安装目录：-usr-local-bin"><a href="#安装目录：-usr-local-bin" class="headerlink" title="安装目录：/usr/local/bin"></a>安装目录：/usr/local/bin</h6><p>​    查看默认安装目录：</p>
 <p>​    redis-benchmark:性能测试工具，可以在自己本子运行，看看自己本子性能如何</p>
 <p>​    redis-check-aof：修复有问题的AOF文件，rdb和aof后面讲</p>
 <p>​    redis-check-dump：修复有问题的dump.rdb文件</p>
 <p>​    redis-sentinel：Redis集群使用</p>
 <p>​    redis-server：Redis服务器启动命令</p>
 <p>​    redis-cli：客户端，操作入口</p>
-<h6 id="2-2-5-前台启动（不推荐）"><a href="#2-2-5-前台启动（不推荐）" class="headerlink" title="2.2.5 前台启动（不推荐）"></a>2.2.5 前台启动（不推荐）</h6><p>前台启动，命令行窗口不能关闭，否则服务器停止</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsaBCDxO.png" alt="img"> </p>
-<h6 id="2-2-6-后台启动（推荐）"><a href="#2-2-6-后台启动（推荐）" class="headerlink" title="2.2.6 后台启动（推荐）"></a>2.2.6 后台启动（推荐）</h6><ol>
+<h6 id="前台启动（不推荐）"><a href="#前台启动（不推荐）" class="headerlink" title="前台启动（不推荐）"></a>前台启动（不推荐）</h6><p>前台启动，命令行窗口不能关闭，否则服务器停止</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsaBCDxO.png" alt="img"> </p>
+<h6 id="后台启动（推荐）"><a href="#后台启动（推荐）" class="headerlink" title="后台启动（推荐）"></a>后台启动（推荐）</h6><ol>
 <li><p><strong>备份redis.conf</strong></p>
 <p>拷贝一份redis.conf到其他目录</p>
 <p>cp  /opt/redis-3.2.5/redis.conf  /myredis</p>
@@ -627,31 +627,31 @@
 <p>redis-server/myredis/redis.conf</p>
 </li>
 </ol>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpssZK7Oq.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpssZK7Oq.png" alt="img"> </p>
 <ol start="4">
 <li>用客户端访问：redis-cli</li>
 </ol>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsWTcXm7.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsWTcXm7.png" alt="img"> </p>
 <ol start="5">
 <li><p>多个端口可以：redis-cli -p6379</p>
 </li>
 <li><p>测试验证： ping</p>
 </li>
 </ol>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps7UBIz5.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps7UBIz5.png" alt="img"> </p>
 <ol start="7">
 <li><p>Redis关闭</p>
 <p>单实例关闭：redis-cli shutdown</p>
 </li>
 </ol>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsg5dXyO.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsg5dXyO.png" alt="img"> </p>
 <p>也可以进入终端后再关闭</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsoRIYTV.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsoRIYTV.png" alt="img"> </p>
 <p>多实例关闭，指定端口关闭：redis-cli -p 6379 shutdown</p>
-<h6 id="2-2-7-Redis介绍相关知识"><a href="#2-2-7-Redis介绍相关知识" class="headerlink" title="2.2.7 Redis介绍相关知识"></a>2.2.7 Redis介绍相关知识</h6><table>
+<h6 id="Redis介绍相关知识"><a href="#Redis介绍相关知识" class="headerlink" title="Redis介绍相关知识"></a>Redis介绍相关知识</h6><table>
 <thead>
 <tr>
-<th>端口6379从何而来Alessia  Merz<img src="images/wpsI3kNRH.png" alt="img"></th>
+<th>端口6379从何而来Alessia  Merz<img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsI3kNRH.png" alt="img"></th>
 <th>默认16个数据库，类似数组下标从0开始，初始默认使用0号库使用命令 select  <dbid>来切换数据库。如: select 8 统一密码管理，所有库同样密码。dbsize查看当前数据库的key的数量flushdb清空当前库flushall通杀全部库</th>
 </tr>
 </thead>
@@ -664,7 +664,7 @@
 <p>多路复用是指使用一个线程来检查多个文件描述符（Socket）的就绪状态，比如调用select和poll函数，传入多个文件描述符，如果有一个文件描述符就绪，则返回，否则阻塞直到超时。得到就绪状态后进行真正的操作可以在同一个线程里执行，也可以启动线程执行（比如使用线程池）</p>
 <p>串行  vs  多线程+锁（memcached） vs  单线程+多路IO复用(Redis)</p>
 <p>（与Memcache三点不同: 支持多数据类型，支持持久化，单线程+多路IO复用）  </p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsMOQK0A.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsMOQK0A.png" alt="img"> </p>
 
       
     </div>
