@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Redis集群问题容量不够，redis如何进行扩容？ 并发写操作， redis如何分摊？ 另外，主从模式，薪火相传模式，主机宕机，导致ip地址发生变化，应用程序中配置需要修改对应的主机地址、端口等信息。 之前通过代理主机来解决，但是redis3.0中提供了解决方案。就是无中心化集群配置。 什么是集群Redis 集群实现了对Redis的水平扩容，即启动N个redis节点，将整个数据库分布存储在这N个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="14.Redis集群">
+<meta property="og:url" content="http://example.com/2022/01/04/redis/14.Redis%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="核动力niuniu">
+<meta property="og:description" content="Redis集群问题容量不够，redis如何进行扩容？ 并发写操作， redis如何分摊？ 另外，主从模式，薪火相传模式，主机宕机，导致ip地址发生变化，应用程序中配置需要修改对应的主机地址、端口等信息。 之前通过代理主机来解决，但是redis3.0中提供了解决方案。就是无中心化集群配置。 什么是集群Redis 集群实现了对Redis的水平扩容，即启动N个redis节点，将整个数据库分布存储在这N个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsHJosTE.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps3jmGkU.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsgQNKrD.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsmU3Viv.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsdFtG2B.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsPROCBG.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsdvhQ5a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsjQJy6v.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszdwG2f.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsTiprHP.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps095ctS.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsAAZqC5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsBqm3Tu.png">
+<meta property="article:published_time" content="2022-01-04T01:20:24.000Z">
+<meta property="article:modified_time" content="2022-01-05T12:56:59.632Z">
+<meta property="article:author" content="核动力niuniu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsHJosTE.png">
+
+<link rel="canonical" href="http://example.com/2022/01/04/redis/14.Redis%E9%9B%86%E7%BE%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>14.Redis集群 | 核动力niuniu</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">核动力niuniu</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis/14.Redis%E9%9B%86%E7%BE%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="核动力niuniu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="核动力niuniu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          14.Redis集群
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-04 09:20:24" itemprop="dateCreated datePublished" datetime="2022-01-04T09:20:24+08:00">2022-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-05 20:56:59" itemprop="dateModified" datetime="2022-01-05T20:56:59+08:00">2022-01-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="Redis集群"><a href="#Redis集群" class="headerlink" title="Redis集群"></a>Redis集群</h4><h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>容量不够，redis如何进行扩容？</p>
+<p>并发写操作， redis如何分摊？</p>
+<p>另外，主从模式，薪火相传模式，主机宕机，导致ip地址发生变化，应用程序中配置需要修改对应的主机地址、端口等信息。</p>
+<p>之前通过代理主机来解决，但是redis3.0中提供了解决方案。就是无中心化集群配置。</p>
+<h5 id="什么是集群"><a href="#什么是集群" class="headerlink" title="什么是集群"></a>什么是集群</h5><p>Redis 集群实现了对Redis的水平扩容，即启动N个redis节点，将整个数据库分布存储在这N个节点中，每个节点存储总数据的1/N。</p>
+<p>Redis 集群通过分区（partition）来提供一定程度的可用性（availability）： 即使集群中有一部分节点失效或者无法进行通讯， 集群也可以继续处理命令请求。</p>
+<h5 id="删除持久化数据"><a href="#删除持久化数据" class="headerlink" title="删除持久化数据"></a>删除持久化数据</h5><p>将rdb,aof文件都删除掉。</p>
+<h5 id="制作6个实例，6379-6380-6381-6389-6390-6391"><a href="#制作6个实例，6379-6380-6381-6389-6390-6391" class="headerlink" title="制作6个实例，6379,6380,6381,6389,6390,6391"></a>制作6个实例，6379,6380,6381,6389,6390,6391</h5><h6 id="配置基本信息"><a href="#配置基本信息" class="headerlink" title="配置基本信息"></a>配置基本信息</h6><p>​    开启daemonize yes</p>
+<p>​    Pid文件名字</p>
+<p>​    指定端口</p>
+<p>​    Log文件名字</p>
+<p>​    Dump.rdb名字</p>
+<p>​    Appendonly 关掉或者换名字</p>
+<h6 id="redis-cluster配置修改"><a href="#redis-cluster配置修改" class="headerlink" title="redis cluster配置修改"></a>redis cluster配置修改</h6><p>​    cluster-enabled yes  打开集群模式</p>
+<p>​    cluster-config-file nodes-6379.conf 设定节点配置文件名</p>
+<p>​    cluster-node-timeout 15000  设定节点失联时间，超过该时间（毫秒），集群自动进行主从切换。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">include</span> <span class="string">/home/bigdata/redis.conf</span></span><br><span class="line"><span class="attr">port</span> <span class="string">6379</span></span><br><span class="line"><span class="attr">pidfile</span> <span class="string">&quot;/var/run/redis_6379.pid&quot;</span></span><br><span class="line"><span class="attr">dbfilename</span> <span class="string">&quot;dump6379.rdb&quot;</span></span><br><span class="line"><span class="attr">dir</span> <span class="string">&quot;/home/bigdata/redis_cluster&quot;</span></span><br><span class="line"><span class="attr">logfile</span> <span class="string">&quot;/home/bigdata/redis_cluster/redis_err_6379.log&quot;</span></span><br><span class="line"><span class="meta">cluster-enabled</span> <span class="string">yes</span></span><br><span class="line"><span class="meta">cluster-config-file</span> <span class="string">nodes-6379.conf</span></span><br><span class="line"><span class="meta">cluster-node-timeout</span> <span class="string">15000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="修改好redis6379-conf文件，拷贝多个redis-conf文件"><a href="#修改好redis6379-conf文件，拷贝多个redis-conf文件" class="headerlink" title="修改好redis6379.conf文件，拷贝多个redis.conf文件"></a>修改好redis6379.conf文件，拷贝多个redis.conf文件</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsHJosTE.png" alt="img"> </p>
+<h6 id="使用查找替换修改另外5个文件"><a href="#使用查找替换修改另外5个文件" class="headerlink" title="使用查找替换修改另外5个文件"></a>使用查找替换修改另外5个文件</h6><p>例如：:%s/6379/6380  </p>
+<h6 id="启动6个redis服务"><a href="#启动6个redis服务" class="headerlink" title="启动6个redis服务"></a>启动6个redis服务</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps3jmGkU.png" alt="img"> </p>
+<h5 id="将六个节点合成一个集群"><a href="#将六个节点合成一个集群" class="headerlink" title="将六个节点合成一个集群"></a>将六个节点合成一个集群</h5><p>组合之前，请确保所有redis实例启动后，nodes-xxxx.conf文件都生成正常。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsgQNKrD.png" alt="img"> </p>
+<ul>
+<li>合体：</li>
+</ul>
+<p>cd  /opt/redis-6.2.1/src</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster create --cluster-replicas 1 192.168.11.101:6379 192.168.11.101:6380 192.168.11.101:6381 192.168.11.101:6389 192.168.11.101:6390 192.168.11.101:6391</span><br></pre></td></tr></table></figure>
+
+
+
+<p>此处不要用127.0.0.1， 请用真实IP地址</p>
+<p>–replicas 1 采用最简单的方式配置集群，一台主机，一台从机，正好三组。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsmU3Viv.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsdFtG2B.png" alt="img"> </p>
+<ul>
+<li>普通方式登录</li>
+</ul>
+<p>可能直接进入读主机，存储数据时，会出现MOVED重定向操作。所以，应该以集群方式登录。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsPROCBG.png" alt="img"> </p>
+<h5 id="c-采用集群策略连接，设置数据会自动切换到相应的写主机"><a href="#c-采用集群策略连接，设置数据会自动切换到相应的写主机" class="headerlink" title="-c 采用集群策略连接，设置数据会自动切换到相应的写主机"></a>-c 采用集群策略连接，设置数据会自动切换到相应的写主机</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsdvhQ5a.png" alt="img"> </p>
+<h5 id="通过-cluster-nodes-命令查看集群信息"><a href="#通过-cluster-nodes-命令查看集群信息" class="headerlink" title="通过 cluster nodes 命令查看集群信息"></a>通过 cluster nodes 命令查看集群信息</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsjQJy6v.png" alt="img"> </p>
+<h5 id="redis-cluster-如何分配这六个节点"><a href="#redis-cluster-如何分配这六个节点" class="headerlink" title="redis cluster 如何分配这六个节点?"></a>redis cluster 如何分配这六个节点?</h5><p>一个集群至少要有三个主节点。</p>
+<p>选项 –cluster-replicas 1 表示我们希望为集群中的每个主节点创建一个从节点。</p>
+<p>分配原则尽量保证每个主数据库运行在不同的IP地址，每个从库和主库不在一个IP地址上。</p>
+<h5 id="什么是slots"><a href="#什么是slots" class="headerlink" title="什么是slots"></a>什么是slots</h5><p>[OK] All nodes agree about slots configuration.</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Check for open slots…</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Check slots coverage…</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>[OK] All 16384 slots covered.</p>
+<p>一个 Redis 集群包含 16384 个插槽（hash slot）， 数据库中的每个键都属于这 16384 个插槽的其中一个， </p>
+<p>集群使用公式 CRC16(key) % 16384 来计算键 key 属于哪个槽， 其中 CRC16(key) 语句用于计算键 key 的 CRC16 校验和 。</p>
+<p>集群中的每个节点负责处理一部分插槽。 举个例子， 如果一个集群可以有主节点， 其中：</p>
+<p>节点 A 负责处理 0 号至 5460 号插槽。</p>
+<p>节点 B 负责处理 5461 号至 10922 号插槽。</p>
+<p>节点 C 负责处理 10923 号至 16383 号插槽。</p>
+<h5 id="在集群中录入值"><a href="#在集群中录入值" class="headerlink" title="在集群中录入值"></a>在集群中录入值</h5><p>在redis-cli每次录入、查询键值，redis都会计算出该key应该送往的插槽，如果不是该客户端对应服务器的插槽，redis会报错，并告知应前往的redis实例地址和端口。</p>
+<p>redis-cli客户端提供了 –c 参数实现自动重定向。</p>
+<p>如 redis-cli  -c –p 6379 登入后，再录入、查询键值对可以自动重定向。</p>
+<p>不在一个slot下的键值，是不能使用mget,mset等多键操作。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszdwG2f.png" alt="img"> </p>
+<p>可以通过{}来定义组的概念，从而使key中{}内相同内容的键值对放到一个slot中去。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsTiprHP.png" alt="img"> </p>
+<h5 id="查询集群中的值"><a href="#查询集群中的值" class="headerlink" title="查询集群中的值"></a>查询集群中的值</h5><p>CLUSTER GETKEYSINSLOT <slot><count> 返回 count 个 slot 槽中的键。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps095ctS.png" alt="img"> </p>
+<h5 id="故障恢复"><a href="#故障恢复" class="headerlink" title="故障恢复"></a>故障恢复</h5><p>如果主节点下线？从节点能否自动升为主节点？注意：15秒超时</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsAAZqC5.png" alt="img"> </p>
+<p>主节点恢复后，主从关系会如何？主节点回来变成从机。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsBqm3Tu.png" alt="img"> </p>
+<p>如果所有某一段插槽的主从节点都宕掉，redis服务是否还能继续?</p>
+<p>如果某一段插槽的主从都挂掉，而cluster-require-full-coverage 为yes ，那么 ，整个集群都挂掉</p>
+<p>如果某一段插槽的主从都挂掉，而cluster-require-full-coverage 为no ，那么，该插槽数据全都不能使用，也无法存储。</p>
+<p>redis.conf中的参数  cluster-require-full-coverage</p>
+<h5 id="集群的Jedis开发"><a href="#集群的Jedis开发" class="headerlink" title="集群的Jedis开发"></a>集群的Jedis开发</h5><p>即使连接的不是主机，集群会自动切换主机存储。主机写，从机读。</p>
+<p>无中心化主从集群。无论从哪台主机写的数据，其他主机上都能读到数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisClusterTest</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123; </span><br><span class="line">     Set&lt;HostAndPort&gt;set =<span class="keyword">new</span> HashSet&lt;HostAndPort&gt;();</span><br><span class="line">     set.add(<span class="keyword">new</span> HostAndPort(<span class="string">&quot;192.168.31.211&quot;</span>,<span class="number">6379</span>));</span><br><span class="line">     JedisCluster jedisCluster=<span class="keyword">new</span> JedisCluster(set);</span><br><span class="line">     jedisCluster.set(<span class="string">&quot;k1&quot;</span>, <span class="string">&quot;v1&quot;</span>);</span><br><span class="line">     System.out.println(jedisCluster.get(<span class="string">&quot;k1&quot;</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Redis-集群提供了以下好处"><a href="#Redis-集群提供了以下好处" class="headerlink" title="Redis 集群提供了以下好处"></a>Redis 集群提供了以下好处</h5><p>实现扩容</p>
+<p>分摊压力</p>
+<p>无中心配置相对简单</p>
+<h5 id="Redis-集群的不足"><a href="#Redis-集群的不足" class="headerlink" title="Redis 集群的不足"></a>Redis 集群的不足</h5><p>多键操作是不被支持的 </p>
+<p>多键的Redis事务是不被支持的。lua脚本不被支持</p>
+<p>由于集群方案出现较晚，很多公司已经采用了其他的集群方案，而代理或者客户端分片的方案想要迁移至redis cluster，需要整体迁移而不是逐步过渡，复杂度较大。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/04/redis/15.Redis%E5%BA%94%E7%94%A8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="prev" title="15.Redis应用问题解决">
+      <i class="fa fa-chevron-left"></i> 15.Redis应用问题解决
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/04/redis/13.Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" rel="next" title="13.Redis主从复制">
+      13.Redis主从复制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis%E9%9B%86%E7%BE%A4"><span class="nav-number">1.</span> <span class="nav-text">Redis集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9B%86%E7%BE%A4"><span class="nav-number">1.2.</span> <span class="nav-text">什么是集群</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.</span> <span class="nav-text">删除持久化数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%B6%E4%BD%9C6%E4%B8%AA%E5%AE%9E%E4%BE%8B%EF%BC%8C6379-6380-6381-6389-6390-6391"><span class="nav-number">1.4.</span> <span class="nav-text">制作6个实例，6379,6380,6381,6389,6390,6391</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">1.4.1.</span> <span class="nav-text">配置基本信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#redis-cluster%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">redis cluster配置修改</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%A5%BDredis6379-conf%E6%96%87%E4%BB%B6%EF%BC%8C%E6%8B%B7%E8%B4%9D%E5%A4%9A%E4%B8%AAredis-conf%E6%96%87%E4%BB%B6"><span class="nav-number">1.4.3.</span> <span class="nav-text">修改好redis6379.conf文件，拷贝多个redis.conf文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9F%A5%E6%89%BE%E6%9B%BF%E6%8D%A2%E4%BF%AE%E6%94%B9%E5%8F%A6%E5%A4%965%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="nav-number">1.4.4.</span> <span class="nav-text">使用查找替换修改另外5个文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%90%AF%E5%8A%A86%E4%B8%AAredis%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.4.5.</span> <span class="nav-text">启动6个redis服务</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%86%E5%85%AD%E4%B8%AA%E8%8A%82%E7%82%B9%E5%90%88%E6%88%90%E4%B8%80%E4%B8%AA%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.</span> <span class="nav-text">将六个节点合成一个集群</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#c-%E9%87%87%E7%94%A8%E9%9B%86%E7%BE%A4%E7%AD%96%E7%95%A5%E8%BF%9E%E6%8E%A5%EF%BC%8C%E8%AE%BE%E7%BD%AE%E6%95%B0%E6%8D%AE%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E5%88%B0%E7%9B%B8%E5%BA%94%E7%9A%84%E5%86%99%E4%B8%BB%E6%9C%BA"><span class="nav-number">1.6.</span> <span class="nav-text">-c 采用集群策略连接，设置数据会自动切换到相应的写主机</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-cluster-nodes-%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E4%BF%A1%E6%81%AF"><span class="nav-number">1.7.</span> <span class="nav-text">通过 cluster nodes 命令查看集群信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#redis-cluster-%E5%A6%82%E4%BD%95%E5%88%86%E9%85%8D%E8%BF%99%E5%85%AD%E4%B8%AA%E8%8A%82%E7%82%B9"><span class="nav-number">1.8.</span> <span class="nav-text">redis cluster 如何分配这六个节点?</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFslots"><span class="nav-number">1.9.</span> <span class="nav-text">什么是slots</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8%E9%9B%86%E7%BE%A4%E4%B8%AD%E5%BD%95%E5%85%A5%E5%80%BC"><span class="nav-number">1.10.</span> <span class="nav-text">在集群中录入值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E9%9B%86%E7%BE%A4%E4%B8%AD%E7%9A%84%E5%80%BC"><span class="nav-number">1.11.</span> <span class="nav-text">查询集群中的值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D"><span class="nav-number">1.12.</span> <span class="nav-text">故障恢复</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%9A%84Jedis%E5%BC%80%E5%8F%91"><span class="nav-number">1.13.</span> <span class="nav-text">集群的Jedis开发</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-%E9%9B%86%E7%BE%A4%E6%8F%90%E4%BE%9B%E4%BA%86%E4%BB%A5%E4%B8%8B%E5%A5%BD%E5%A4%84"><span class="nav-number">1.14.</span> <span class="nav-text">Redis 集群提供了以下好处</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="nav-number">1.15.</span> <span class="nav-text">Redis 集群的不足</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">核动力niuniu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">核动力niuniu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
