@@ -20,31 +20,31 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="十、Redis_事务_锁机制_秒杀10.1 Redis的事务定义  Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。 Redis事务的主要作用就是串联多个命令防止别的命令插队。 10.2 Multi、Exec、discard从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exe">
+  <meta name="description" content="Redis事务锁机制_秒杀Redis的事务定义  Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。 Redis事务的主要作用就是串联多个命令防止别的命令插队。 Multi、Exec、discard从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exec后，Redis会将之前的命">
 <meta property="og:type" content="article">
 <meta property="og:title" content="9.Redis事务锁机制_秒杀">
-<meta property="og:url" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/index.html">
+<meta property="og:url" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis%E4%BA%8B%E5%8A%A1%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/index.html">
 <meta property="og:site_name" content="核动力niuniu">
-<meta property="og:description" content="十、Redis_事务_锁机制_秒杀10.1 Redis的事务定义  Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。 Redis事务的主要作用就是串联多个命令防止别的命令插队。 10.2 Multi、Exec、discard从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exe">
+<meta property="og:description" content="Redis事务锁机制_秒杀Redis的事务定义  Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。 Redis事务的主要作用就是串联多个命令防止别的命令插队。 Multi、Exec、discard从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exec后，Redis会将之前的命">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsiVuy1s.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsSWbwiK.jpg">
-<meta property="og:image" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/images/wpsVKLohQ.png">
-<meta property="og:image" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/images/wps7f8BVN.png">
-<meta property="og:image" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/images/wpsvFRZqh.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsfn9pfZ.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsXR5GDM.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsc2P7SS.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsNHfbc7.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpszm1Tei.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsfxr1Ku.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsiVuy1s.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsSWbwiK.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsVKLohQ.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps7f8BVN.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsvFRZqh.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfn9pfZ.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsXR5GDM.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsc2P7SS.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsNHfbc7.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszm1Tei.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfxr1Ku.png">
 <meta property="article:published_time" content="2022-01-04T14:20:24.000Z">
-<meta property="article:modified_time" content="2022-01-05T11:49:03.541Z">
+<meta property="article:modified_time" content="2022-01-05T12:33:40.573Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsiVuy1s.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsiVuy1s.png">
 
-<link rel="canonical" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/">
+<link rel="canonical" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis%E4%BA%8B%E5%8A%A1%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/">
 
 
 <script id="page-configurations">
@@ -167,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis_%E4%BA%8B%E5%8A%A1_%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/9.Redis%E4%BA%8B%E5%8A%A1%E9%94%81%E6%9C%BA%E5%88%B6_%E7%A7%92%E6%9D%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 19:49:03" itemprop="dateModified" datetime="2022-01-05T19:49:03+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:33:40" itemprop="dateModified" datetime="2022-01-05T20:33:40+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,45 +220,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="十、Redis-事务-锁机制-秒杀"><a href="#十、Redis-事务-锁机制-秒杀" class="headerlink" title="十、Redis_事务_锁机制_秒杀"></a>十、Redis_事务_锁机制_秒杀</h4><h5 id="10-1-Redis的事务定义"><a href="#10-1-Redis的事务定义" class="headerlink" title="10.1 Redis的事务定义"></a>10.1 Redis的事务定义</h5><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsiVuy1s.png" alt="img"> </p>
+        <h4 id="Redis事务锁机制-秒杀"><a href="#Redis事务锁机制-秒杀" class="headerlink" title="Redis事务锁机制_秒杀"></a>Redis事务锁机制_秒杀</h4><h5 id="Redis的事务定义"><a href="#Redis的事务定义" class="headerlink" title="Redis的事务定义"></a>Redis的事务定义</h5><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsiVuy1s.png" alt="img"> </p>
 <p>Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</p>
 <p>Redis事务的主要作用就是串联多个命令防止别的命令插队。</p>
-<h5 id="10-2-Multi、Exec、discard"><a href="#10-2-Multi、Exec、discard" class="headerlink" title="10.2 Multi、Exec、discard"></a>10.2 Multi、Exec、discard</h5><p>从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exec后，Redis会将之前的命令队列中的命令依次执行。</p>
+<h5 id="Multi、Exec、discard"><a href="#Multi、Exec、discard" class="headerlink" title="Multi、Exec、discard"></a>Multi、Exec、discard</h5><p>从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行，直到输入Exec后，Redis会将之前的命令队列中的命令依次执行。</p>
 <p>组队的过程中可以通过discard来放弃组队。  </p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsSWbwiK.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsSWbwiK.jpg" alt="img"> </p>
 <p>案例：</p>
 <table>
 <thead>
 <tr>
-<th><img src="images/wpsVKLohQ.png" alt="img"> 组队成功，提交成功</th>
+<th><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsVKLohQ.png" alt="img"> 组队成功，提交成功</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="images/wps7f8BVN.png" alt="img"> 组队阶段报错，提交失败</td>
+<td><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps7f8BVN.png" alt="img"> 组队阶段报错，提交失败</td>
 </tr>
 <tr>
-<td><img src="images/wpsvFRZqh.png" alt="img"> 组队成功，提交有成功有失败情况</td>
+<td><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsvFRZqh.png" alt="img"> 组队成功，提交有成功有失败情况</td>
 </tr>
 </tbody></table>
-<h5 id="10-3-事务的错误处理"><a href="#10-3-事务的错误处理" class="headerlink" title="10.3 事务的错误处理"></a>10.3 事务的错误处理</h5><p>组队中某个命令出现了报告错误，执行时整个的所有队列都会被取消。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsfn9pfZ.png" alt="img"> </p>
+<h5 id="事务的错误处理"><a href="#事务的错误处理" class="headerlink" title="事务的错误处理"></a>事务的错误处理</h5><p>组队中某个命令出现了报告错误，执行时整个的所有队列都会被取消。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfn9pfZ.png" alt="img"> </p>
 <p>如果执行阶段某个命令报出了错误，则只有报错的命令不会被执行，而其他的命令都会执行，不会回滚。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsXR5GDM.png" alt="img"> </p>
-<h5 id="10-4-为什么要做成事务"><a href="#10-4-为什么要做成事务" class="headerlink" title="10.4 为什么要做成事务"></a>10.4 为什么要做成事务</h5><p>想想一个场景：有很多人有你的账户,同时去参加双十一抢购</p>
-<h5 id="10-5-事务冲突的问题"><a href="#10-5-事务冲突的问题" class="headerlink" title="10.5 事务冲突的问题"></a>10.5 事务冲突的问题</h5><h6 id="10-5-1-例子"><a href="#10-5-1-例子" class="headerlink" title="10.5.1 例子"></a>10.5.1 例子</h6><p>一个请求想给金额减8000</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsXR5GDM.png" alt="img"> </p>
+<h5 id="为什么要做成事务"><a href="#为什么要做成事务" class="headerlink" title="为什么要做成事务"></a>为什么要做成事务</h5><p>想想一个场景：有很多人有你的账户,同时去参加双十一抢购</p>
+<h5 id="事务冲突的问题"><a href="#事务冲突的问题" class="headerlink" title="事务冲突的问题"></a>事务冲突的问题</h5><h6 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h6><p>一个请求想给金额减8000</p>
 <p>一个请求想给金额减5000</p>
 <p>一个请求想给金额减1000</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsc2P7SS.png" alt="img"> </p>
-<h6 id="10-5-2-悲观锁"><a href="#10-5-2-悲观锁" class="headerlink" title="10.5.2 悲观锁"></a>10.5.2 悲观锁</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsNHfbc7.png" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsc2P7SS.png" alt="img"> </p>
+<h6 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsNHfbc7.png" alt="img"> </p>
 <p><strong>悲观锁(Pessimistic Lock)：</strong>顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。</p>
-<h6 id="10-5-3-乐观锁"><a href="#10-5-3-乐观锁" class="headerlink" title="10.5.3 乐观锁"></a>10.5.3 乐观锁</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpszm1Tei.png" alt="img"> </p>
+<h6 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpszm1Tei.png" alt="img"> </p>
 <p><strong>乐观锁(Optimistic Lock)：</strong>顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号等机制。乐观锁适用于多读的应用类型，这样可以提高吞吐量。Redis就是利用这种check-and-set机制实现事务的。</p>
-<h6 id="10-5-4-WATCH-key-key-…"><a href="#10-5-4-WATCH-key-key-…" class="headerlink" title="10.5.4 WATCH key [key …]"></a>10.5.4 WATCH key [key …]</h6><p>在执行multi之前，先执行watch key1 [key2],可以监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsfxr1Ku.png" alt="img"> </p>
-<h6 id="10-5-6-unwatch"><a href="#10-5-6-unwatch" class="headerlink" title="10.5.6 unwatch"></a>10.5.6 unwatch</h6><p>取消 WATCH 命令对所有 key 的监视。</p>
+<h6 id="WATCH-key-key-…"><a href="#WATCH-key-key-…" class="headerlink" title="WATCH key [key …]"></a>WATCH key [key …]</h6><p>在执行multi之前，先执行watch key1 [key2],可以监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsfxr1Ku.png" alt="img"> </p>
+<h6 id="unwatch"><a href="#unwatch" class="headerlink" title="unwatch"></a>unwatch</h6><p>取消 WATCH 命令对所有 key 的监视。</p>
 <p>如果在执行 WATCH 命令之后，EXEC 命令或DISCARD 命令先被执行了的话，那么就不需要再执行UNWATCH 了。</p>
 <p><a target="_blank" rel="noopener" href="http://doc.redisfans.com/transaction/exec.html">http://doc.redisfans.com/transaction/exec.html</a></p>
-<h5 id="10-6-Redis事务三特性"><a href="#10-6-Redis事务三特性" class="headerlink" title="10.6 Redis事务三特性"></a>10.6 Redis事务三特性</h5><p>Ø 单独的隔离操作 </p>
+<h5 id="Redis事务三特性"><a href="#Redis事务三特性" class="headerlink" title="Redis事务三特性"></a>Redis事务三特性</h5><p>Ø 单独的隔离操作 </p>
 <p>n 事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。 </p>
 <p>Ø 没有隔离级别的概念 </p>
 <p>n 队列中的命令没有提交之前都不会实际被执行，因为事务提交前任何指令都不会被实际执行</p>
@@ -279,12 +279,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/10.Redis%E4%BA%8B%E5%8A%A1%E7%A7%92%E6%9D%80%E6%A1%88%E4%BE%8B/" rel="prev" title="10.Redis_事务_秒杀案例">
-      <i class="fa fa-chevron-left"></i> 10.Redis_事务_秒杀案例
+    <a href="/2022/01/04/k8s%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/2.kubernetes%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="prev" title="2.kubernetes集群环境搭建">
+      <i class="fa fa-chevron-left"></i> 2.kubernetes集群环境搭建
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/8.Redis%E4%B8%8ESpring%20Boot%E6%95%B4%E5%90%88/" rel="next" title="8.Redis与Spring Boot整合">
-      8.Redis与Spring Boot整合 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/13.Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" rel="next" title="13.Redis主从复制">
+      13.Redis主从复制 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -344,7 +344,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E3%80%81Redis-%E4%BA%8B%E5%8A%A1-%E9%94%81%E6%9C%BA%E5%88%B6-%E7%A7%92%E6%9D%80"><span class="nav-number">1.</span> <span class="nav-text">十、Redis_事务_锁机制_秒杀</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#10-1-Redis%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">10.1 Redis的事务定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-Multi%E3%80%81Exec%E3%80%81discard"><span class="nav-number">1.2.</span> <span class="nav-text">10.2 Multi、Exec、discard</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-3-%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">10.3 事务的错误处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-4-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E6%88%90%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.4.</span> <span class="nav-text">10.4 为什么要做成事务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-5-%E4%BA%8B%E5%8A%A1%E5%86%B2%E7%AA%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">10.5 事务冲突的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#10-5-1-%E4%BE%8B%E5%AD%90"><span class="nav-number">1.5.1.</span> <span class="nav-text">10.5.1 例子</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#10-5-2-%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">1.5.2.</span> <span class="nav-text">10.5.2 悲观锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#10-5-3-%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.5.3.</span> <span class="nav-text">10.5.3 乐观锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#10-5-4-WATCH-key-key-%E2%80%A6"><span class="nav-number">1.5.4.</span> <span class="nav-text">10.5.4 WATCH key [key …]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#10-5-6-unwatch"><span class="nav-number">1.5.5.</span> <span class="nav-text">10.5.6 unwatch</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-6-Redis%E4%BA%8B%E5%8A%A1%E4%B8%89%E7%89%B9%E6%80%A7"><span class="nav-number">1.6.</span> <span class="nav-text">10.6 Redis事务三特性</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis%E4%BA%8B%E5%8A%A1%E9%94%81%E6%9C%BA%E5%88%B6-%E7%A7%92%E6%9D%80"><span class="nav-number">1.</span> <span class="nav-text">Redis事务锁机制_秒杀</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">Redis的事务定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Multi%E3%80%81Exec%E3%80%81discard"><span class="nav-number">1.2.</span> <span class="nav-text">Multi、Exec、discard</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">事务的错误处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E6%88%90%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.4.</span> <span class="nav-text">为什么要做成事务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%86%B2%E7%AA%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">事务冲突的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">1.5.1.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81"><span class="nav-number">1.5.2.</span> <span class="nav-text">悲观锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.5.3.</span> <span class="nav-text">乐观锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#WATCH-key-key-%E2%80%A6"><span class="nav-number">1.5.4.</span> <span class="nav-text">WATCH key [key …]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#unwatch"><span class="nav-number">1.5.5.</span> <span class="nav-text">unwatch</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis%E4%BA%8B%E5%8A%A1%E4%B8%89%E7%89%B9%E6%80%A7"><span class="nav-number">1.6.</span> <span class="nav-text">Redis事务三特性</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

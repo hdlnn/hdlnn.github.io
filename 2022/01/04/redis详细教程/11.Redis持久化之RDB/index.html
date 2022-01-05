@@ -20,29 +20,29 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="十二、Redis持久化之RDB12.1 总体介绍官网介绍：http:&#x2F;&#x2F;www.redis.io   Redis 提供了2个不同形式的持久化方式。  RDB（Redis DataBase）  AOF（Append Of File）   12.2 RDB（Redis DataBase）12.2.1 官网介绍  12.2.2 是什么在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Sna">
+  <meta name="description" content="Redis持久化之RDB总体介绍官网介绍：http:&#x2F;&#x2F;www.redis.io   Redis 提供了2个不同形式的持久化方式。  RDB（Redis DataBase）  AOF（Append Of File）   RDB（Redis DataBase）官网介绍  是什么在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里 备">
 <meta property="og:type" content="article">
 <meta property="og:title" content="11.Redis持久化之RDB">
 <meta property="og:url" content="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/11.Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BRDB/index.html">
 <meta property="og:site_name" content="核动力niuniu">
-<meta property="og:description" content="十二、Redis持久化之RDB12.1 总体介绍官网介绍：http:&#x2F;&#x2F;www.redis.io   Redis 提供了2个不同形式的持久化方式。  RDB（Redis DataBase）  AOF（Append Of File）   12.2 RDB（Redis DataBase）12.2.1 官网介绍  12.2.2 是什么在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Sna">
+<meta property="og:description" content="Redis持久化之RDB总体介绍官网介绍：http:&#x2F;&#x2F;www.redis.io   Redis 提供了2个不同形式的持久化方式。  RDB（Redis DataBase）  AOF（Append Of File）   RDB（Redis DataBase）官网介绍  是什么在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里 备">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsM9NzJ9.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsaIXXxk.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsJjacp1.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsRVvGMU.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpstHPBD6.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsstk9l0.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsEWXNVg.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsoZEIFD.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsmHDA4E.jpg">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsX3DV2t.png">
-<meta property="og:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps1ZcZDR.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsM9NzJ9.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsaIXXxk.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsJjacp1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsRVvGMU.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpstHPBD6.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsstk9l0.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsEWXNVg.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsoZEIFD.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsmHDA4E.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsX3DV2t.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1ZcZDR.png">
 <meta property="article:published_time" content="2022-01-04T14:20:24.000Z">
-<meta property="article:modified_time" content="2022-01-05T11:51:34.575Z">
+<meta property="article:modified_time" content="2022-01-05T12:36:15.161Z">
 <meta property="article:author" content="核动力niuniu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsM9NzJ9.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsM9NzJ9.png">
 
 <link rel="canonical" href="http://example.com/2022/01/04/redis%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B/11.Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BRDB/">
 
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-05 19:51:34" itemprop="dateModified" datetime="2022-01-05T19:51:34+08:00">2022-01-05</time>
+                <time title="修改时间：2022-01-05 20:36:15" itemprop="dateModified" datetime="2022-01-05T20:36:15+08:00">2022-01-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,8 +220,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="十二、Redis持久化之RDB"><a href="#十二、Redis持久化之RDB" class="headerlink" title="十二、Redis持久化之RDB"></a>十二、Redis持久化之RDB</h4><h5 id="12-1-总体介绍"><a href="#12-1-总体介绍" class="headerlink" title="12.1 总体介绍"></a>12.1 总体介绍</h5><p>官网介绍：<a target="_blank" rel="noopener" href="http://www.redis.io/">http://www.redis.io</a></p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsM9NzJ9.png" alt="img"> </p>
+        <h4 id="Redis持久化之RDB"><a href="#Redis持久化之RDB" class="headerlink" title="Redis持久化之RDB"></a>Redis持久化之RDB</h4><h5 id="总体介绍"><a href="#总体介绍" class="headerlink" title="总体介绍"></a>总体介绍</h5><p>官网介绍：<a target="_blank" rel="noopener" href="http://www.redis.io/">http://www.redis.io</a></p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsM9NzJ9.png" alt="img"> </p>
 <p>Redis 提供了2个不同形式的持久化方式。</p>
 <ul>
 <li><p>RDB（Redis DataBase）</p>
@@ -229,10 +229,10 @@
 <li><p>AOF（Append Of File）</p>
 </li>
 </ul>
-<h5 id="12-2-RDB（Redis-DataBase）"><a href="#12-2-RDB（Redis-DataBase）" class="headerlink" title="12.2 RDB（Redis DataBase）"></a>12.2 RDB（Redis DataBase）</h5><h6 id="12-2-1-官网介绍"><a href="#12-2-1-官网介绍" class="headerlink" title="12.2.1 官网介绍"></a>12.2.1 官网介绍</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsaIXXxk.png" alt="img"> </p>
-<h6 id="12-2-2-是什么"><a href="#12-2-2-是什么" class="headerlink" title="12.2.2 是什么"></a>12.2.2 是什么</h6><p>在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里</p>
-<h6 id="12-2-3-备份是如何执行的"><a href="#12-2-3-备份是如何执行的" class="headerlink" title="12.2.3 备份是如何执行的"></a>12.2.3 备份是如何执行的</h6><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到 一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。 整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能 如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
-<h6 id="12-2-4-Fork"><a href="#12-2-4-Fork" class="headerlink" title="12.2.4 Fork"></a>12.2.4 Fork</h6><ul>
+<h5 id="RDB（Redis-DataBase）"><a href="#RDB（Redis-DataBase）" class="headerlink" title="RDB（Redis DataBase）"></a>RDB（Redis DataBase）</h5><h6 id="官网介绍"><a href="#官网介绍" class="headerlink" title="官网介绍"></a>官网介绍</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsaIXXxk.png" alt="img"> </p>
+<h6 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h6><p>在指定的时间间隔内将内存中的数据集快照写入磁盘， 也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里</p>
+<h6 id="备份是如何执行的"><a href="#备份是如何执行的" class="headerlink" title="备份是如何执行的"></a>备份是如何执行的</h6><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到 一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。 整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能 如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+<h6 id="Fork"><a href="#Fork" class="headerlink" title="Fork"></a>Fork</h6><ul>
 <li><p>Fork的作用是复制一个与当前进程一样的进程。新进程的所有数据（变量、环境变量、程序计数器等） 数值都和原进程一致，但是是一个全新的进程，并作为原进程的子进程</p>
 </li>
 <li><p>在Linux程序中，fork()会产生一个和父进程完全相同的子进程，但子进程在此后多会exec系统调用，出于效率考虑，Linux中引入了“写时复制技术”</p>
@@ -240,16 +240,16 @@
 <li><p>一般情况父进程和子进程会共用同一段物理内存，只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程。</p>
 </li>
 </ul>
-<h6 id="12-2-5-RDB持久化流程"><a href="#12-2-5-RDB持久化流程" class="headerlink" title="12.2.5 RDB持久化流程"></a>12.2.5 RDB持久化流程</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsJjacp1.jpg" alt="img"> </p>
-<h6 id="12-2-6-dump-rdb文件"><a href="#12-2-6-dump-rdb文件" class="headerlink" title="12.2.6 dump.rdb文件"></a>12.2.6 dump.rdb文件</h6><p>在redis.conf中配置文件名称，默认为dump.rdb</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsRVvGMU.jpg" alt="img"> </p>
-<h6 id="12-2-7-配置位置"><a href="#12-2-7-配置位置" class="headerlink" title="12.2.7 配置位置"></a>12.2.7 配置位置</h6><p>rdb文件的保存路径，也可以修改。默认为Redis启动时命令行所在的目录下</p>
+<h6 id="RDB持久化流程"><a href="#RDB持久化流程" class="headerlink" title="RDB持久化流程"></a>RDB持久化流程</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsJjacp1.jpg" alt="img"> </p>
+<h6 id="dump-rdb文件"><a href="#dump-rdb文件" class="headerlink" title="dump.rdb文件"></a>dump.rdb文件</h6><p>在redis.conf中配置文件名称，默认为dump.rdb</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsRVvGMU.jpg" alt="img"> </p>
+<h6 id="配置位置"><a href="#配置位置" class="headerlink" title="配置位置"></a>配置位置</h6><p>rdb文件的保存路径，也可以修改。默认为Redis启动时命令行所在的目录下</p>
 <p>dir “/myredis/“</p>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpstHPBD6.jpg" alt="img"> </p>
-<h6 id="12-2-8-如何触发RDB快照；保持策略"><a href="#12-2-8-如何触发RDB快照；保持策略" class="headerlink" title="12.2.8 如何触发RDB快照；保持策略"></a>12.2.8 如何触发RDB快照；保持策略</h6><ul>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpstHPBD6.jpg" alt="img"> </p>
+<h6 id="如何触发RDB快照；保持策略"><a href="#如何触发RDB快照；保持策略" class="headerlink" title="如何触发RDB快照；保持策略"></a>如何触发RDB快照；保持策略</h6><ul>
 <li>配置文件中默认的快照配置</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsstk9l0.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsstk9l0.jpg" alt="img"> </p>
 <ul>
 <li><p>命令save VS bgsave</p>
 <p>save ：save时只管保存，其它不管，全部阻塞。手动保存。不建议。</p>
@@ -271,18 +271,18 @@
 <li><p>stop-writes-on-bgsave-error</p>
 </li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsEWXNVg.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsEWXNVg.jpg" alt="img"> </p>
 <p>​    当Redis无法写入磁盘的话，直接关掉Redis的写操作。推荐yes.</p>
 <ul>
 <li>rdbcompression 压缩文件</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsoZEIFD.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsoZEIFD.jpg" alt="img"> </p>
 <p>​    对于存储到磁盘中的快照，可以设置是否进行压缩存储。如果是的话，redis会采用LZF算法进行压缩。</p>
 <p>如果你不想消耗CPU来进行压缩的话，可以设置为关闭此功能。推荐yes.</p>
 <ul>
 <li>rdbchecksum 检查完整性</li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsmHDA4E.jpg" alt="img"> </p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsmHDA4E.jpg" alt="img"> </p>
 <p>在存储快照后，还可以让redis使用CRC64算法来进行数据校验，</p>
 <p>但是这样做会增加大约10%的性能消耗，如果希望获取到最大的性能提升，可以关闭此功能</p>
 <p>推荐yes.</p>
@@ -296,7 +296,7 @@
 <p>启动Redis, 备份数据会直接加载</p>
 </li>
 </ul>
-<h6 id="12-2-9-优势"><a href="#12-2-9-优势" class="headerlink" title="12.2.9 优势"></a>12.2.9 优势</h6><ul>
+<h6 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h6><ul>
 <li><p>适合大规模的数据恢复</p>
 </li>
 <li><p>对数据完整性和一致性要求不高更适合使用</p>
@@ -306,12 +306,12 @@
 <li><p>恢复速度快</p>
 </li>
 </ul>
-<p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wpsX3DV2t.png" alt="img"> </p>
-<h6 id="12-2-10-劣势"><a href="#12-2-10-劣势" class="headerlink" title="12.2.10 劣势"></a>12.2.10 劣势</h6><p>l Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</p>
+<p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wpsX3DV2t.png" alt="img"> </p>
+<h6 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h6><p>l Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</p>
 <p>l 虽然Redis在fork时使用了写时拷贝技术,但是如果数据庞大时还是比较消耗性能。</p>
 <p>l 在备份周期在一定间隔时间做一次备份，所以如果Redis意外down掉的话，就会丢失最后一次快照后的所有修改。</p>
-<h6 id="12-2-11-如何停止"><a href="#12-2-11-如何停止" class="headerlink" title="12.2.11 如何停止"></a>12.2.11 如何停止</h6><p>动态停止RDB：redis-cli config set save “”#save后给空值，表示禁用保存策略</p>
-<h6 id="12-2-12-小总结"><a href="#12-2-12-小总结" class="headerlink" title="12.2.12 小总结"></a>12.2.12 小总结</h6><p><img src="C:/Users/Administrator/Desktop/golang/Redis详细教程/images/wps1ZcZDR.png" alt="img"> </p>
+<h6 id="如何停止"><a href="#如何停止" class="headerlink" title="如何停止"></a>如何停止</h6><p>动态停止RDB：redis-cli config set save “”#save后给空值，表示禁用保存策略</p>
+<h6 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h6><p><img src="https://raw.githubusercontent.com/hdlnn/hdlnn.github.io/master/images/redis/images/wps1ZcZDR.png" alt="img"> </p>
 
     </div>
 
@@ -392,7 +392,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BRDB"><span class="nav-number">1.</span> <span class="nav-text">十二、Redis持久化之RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#12-1-%E6%80%BB%E4%BD%93%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">12.1 总体介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-2-RDB%EF%BC%88Redis-DataBase%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">12.2 RDB（Redis DataBase）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-1-%E5%AE%98%E7%BD%91%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">12.2.1 官网介绍</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-2-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.2.</span> <span class="nav-text">12.2.2 是什么</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-3-%E5%A4%87%E4%BB%BD%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E7%9A%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">12.2.3 备份是如何执行的</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-4-Fork"><span class="nav-number">1.2.4.</span> <span class="nav-text">12.2.4 Fork</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-5-RDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.5.</span> <span class="nav-text">12.2.5 RDB持久化流程</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-6-dump-rdb%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.6.</span> <span class="nav-text">12.2.6 dump.rdb文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-7-%E9%85%8D%E7%BD%AE%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.2.7.</span> <span class="nav-text">12.2.7 配置位置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-8-%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91RDB%E5%BF%AB%E7%85%A7%EF%BC%9B%E4%BF%9D%E6%8C%81%E7%AD%96%E7%95%A5"><span class="nav-number">1.2.8.</span> <span class="nav-text">12.2.8 如何触发RDB快照；保持策略</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-9-%E4%BC%98%E5%8A%BF"><span class="nav-number">1.2.9.</span> <span class="nav-text">12.2.9 优势</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-10-%E5%8A%A3%E5%8A%BF"><span class="nav-number">1.2.10.</span> <span class="nav-text">12.2.10 劣势</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-11-%E5%A6%82%E4%BD%95%E5%81%9C%E6%AD%A2"><span class="nav-number">1.2.11.</span> <span class="nav-text">12.2.11 如何停止</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#12-2-12-%E5%B0%8F%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.12.</span> <span class="nav-text">12.2.12 小总结</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B9%8BRDB"><span class="nav-number">1.</span> <span class="nav-text">Redis持久化之RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">总体介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RDB%EF%BC%88Redis-DataBase%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">RDB（Redis DataBase）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%98%E7%BD%91%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">官网介绍</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.2.</span> <span class="nav-text">是什么</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E7%9A%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">备份是如何执行的</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Fork"><span class="nav-number">1.2.4.</span> <span class="nav-text">Fork</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#RDB%E6%8C%81%E4%B9%85%E5%8C%96%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.5.</span> <span class="nav-text">RDB持久化流程</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#dump-rdb%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.6.</span> <span class="nav-text">dump.rdb文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.2.7.</span> <span class="nav-text">配置位置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91RDB%E5%BF%AB%E7%85%A7%EF%BC%9B%E4%BF%9D%E6%8C%81%E7%AD%96%E7%95%A5"><span class="nav-number">1.2.8.</span> <span class="nav-text">如何触发RDB快照；保持策略</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">1.2.9.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%8A%A3%E5%8A%BF"><span class="nav-number">1.2.10.</span> <span class="nav-text">劣势</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9C%E6%AD%A2"><span class="nav-number">1.2.11.</span> <span class="nav-text">如何停止</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%B0%8F%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.12.</span> <span class="nav-text">小总结</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
